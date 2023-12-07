@@ -8,8 +8,9 @@ import {
   DropdownItem,
   Button,
   Selection,
-  select,
 } from "@nextui-org/react";
+import { useSetRecoilState } from "recoil";
+import { categoryIdState } from "@/recoil-store/atoms/upload-video";
 
 export function CategoryListDropdown() {
   // By default, the video categories available are those from IN region. If you want a different country's vide categories, please get the API response from https://developers.google.com/youtube/v3/docs/videoCategories/list and update/replace the VIDEO_CATEGORY_LIST_API_RESPONSE as per your needs.
@@ -350,6 +351,8 @@ export function CategoryListDropdown() {
     }
   };
 
+  let setCategoryId = useSetRecoilState(categoryIdState);
+
   return (
     <Dropdown>
       <DropdownTrigger>
@@ -370,7 +373,13 @@ export function CategoryListDropdown() {
           </DropdownItem>,
           // @ts-ignore
           categoryList.map((category) => (
-            <DropdownItem key={category.title} value={category.id}>
+            <DropdownItem
+              key={category.title}
+              value={category.id}
+              onPress={(e) => {
+                setCategoryId(category.id);
+              }}
+            >
               {category.title}
             </DropdownItem>
           )),

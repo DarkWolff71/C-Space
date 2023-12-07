@@ -12,6 +12,11 @@ import React, { useState, useRef } from "react";
 import { Button } from "@nextui-org/react";
 import axios from "axios";
 import { cn } from "../../../lib/utils";
+import { useRecoilValue } from "recoil";
+import {
+  categoryIdState,
+  privacyStatusState,
+} from "@/recoil-store/atoms/upload-video";
 
 export default function Videos() {
   let [filesPendingToBeUploaded, setFilesPendingToBeUploaded] = useState<
@@ -20,19 +25,22 @@ export default function Videos() {
   let titleInputRef = useRef<HTMLTextAreaElement | null>(null);
   let descriptionInputRef = useRef<HTMLTextAreaElement | null>(null);
   let tagsInputRef = useRef<HTMLTextAreaElement | null>(null);
-  let tagsWarning = useState<boolean>(true);
+  let [tagsInputWarning, setTagsInputWarning] = useState<boolean>(true);
   // TODO: the below two should be updated to recoil for avoiding re-renders
-  let privacyStatus = useState<string>();
-  let category = useState<string>();
+  let privacyStatus = useRecoilValue(privacyStatusState);
+  let category = useRecoilValue(categoryIdState);
 
   let handleSave = () => {
     let tagsArr: string[] = [];
     if (tagsInputRef.current?.value) {
       try {
+        setTagsInputWarning(false);
         tagsArr = tagsInputRef.current.value
           .split(",")
           .map((tag) => tag.trim());
-      } catch {}
+      } catch {
+        setTagsInputWarning(true);
+      }
     }
     axios.post("/api/upload-video", {
       title: titleInputRef.current?.value,
@@ -130,9 +138,9 @@ export default function Videos() {
                   className={cn(
                     "block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 ",
                     {
-                      "border-red-700 ring-red-700 bg-yellow-300": tagsWarning,
-                    },
-                    "border-red-700 ring-red-700 bg-yellow-300"
+                      "border-red-700 ring-red-700 dark:ring-red-700 dark:border-red-700 ring-2":
+                        tagsInputWarning,
+                    }
                   )}
                   placeholder={
                     "Your video's descriptiontags goes here as a comma separated list... \nEx: Santa Cruz, surfing, adventure"

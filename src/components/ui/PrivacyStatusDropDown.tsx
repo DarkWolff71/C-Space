@@ -9,6 +9,8 @@ import {
   Button,
   Selection,
 } from "@nextui-org/react";
+import { useSetRecoilState } from "recoil";
+import { privacyStatusState } from "@/recoil-store/atoms/upload-video";
 
 export function PrivacyStatusDropDown() {
   const PRIVACY_STATUS_LIST = [
@@ -33,6 +35,8 @@ export function PrivacyStatusDropDown() {
     }
   };
 
+  let setPrivacyStatus = useSetRecoilState(privacyStatusState);
+
   return (
     <Dropdown>
       <DropdownTrigger>
@@ -50,7 +54,13 @@ export function PrivacyStatusDropDown() {
         {
           // @ts-ignore
           PRIVACY_STATUS_LIST.map((privacyStatus) => (
-            <DropdownItem key={privacyStatus.title} value={privacyStatus.value}>
+            <DropdownItem
+              key={privacyStatus.title}
+              value={privacyStatus.value}
+              onPress={(e) => {
+                setPrivacyStatus(privacyStatus.value);
+              }}
+            >
               {privacyStatus.title}
             </DropdownItem>
           ))

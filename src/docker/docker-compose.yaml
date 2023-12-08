@@ -1,0 +1,17 @@
+version: "3.8"
+name: "yt-app-docker"
+services:
+  db:
+    image: postgres
+    container_name: yt-postgres
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: yt_praveen
+      POSTGRES_PASSWORD: strong_password
+    volumes:
+      - yt-db:/var/lib/postgresql/data
+
+volumes:
+  yt-db:

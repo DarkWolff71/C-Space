@@ -25,7 +25,7 @@ export default function Videos() {
   let titleInputRef = useRef<HTMLTextAreaElement | null>(null);
   let descriptionInputRef = useRef<HTMLTextAreaElement | null>(null);
   let tagsInputRef = useRef<HTMLTextAreaElement | null>(null);
-  let [tagsInputWarning, setTagsInputWarning] = useState<boolean>(true);
+  let [tagsInputWarning, setTagsInputWarning] = useState<boolean>(false);
   // TODO: the below two should be updated to recoil for avoiding re-renders
   let privacyStatus = useRecoilValue(privacyStatusState);
   let category = useRecoilValue(categoryIdState);

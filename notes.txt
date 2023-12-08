@@ -1,0 +1,38 @@
+Talent networks:
+geekster
+toptal 
+braintrust
+
+psql -h localhost -d mydb -U yt_praveen -W
+
+docker exec -it yt-postgres bash
+
+MLE:
+10^6 for int
+
+
+// DB design:
+- Room:
+    - Id
+    - Name
+    - Editors
+    - Owners
+
+
+// Prisma notes
+model:
+ - fields
+  - name
+  - type
+   - Int 
+   - String
+   - Boolean
+   - BigInt
+   - Float
+   - Decimal  // Almost like a double
+   - DateTime
+   - Json
+   - Bytes
+   - Unsupported
+  - type modifiers
+  - attributes

@@ -1,0 +1,64 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id               String    @id @default(uuid())
+  name             String?
+  userName         String
+  email            String
+  state            Status
+  creatorRooms     Room[]    @relation("creator_rooms")
+  ownerRooms       Room[]    @relation("owner_rooms")
+  sentMessages     Message[] @relation("sent_messages")
+  receivedMessages Message[] @relation("received_messages")
+}
+
+model Room {
+  id       String    @id @default(uuid())
+  name     String
+  owners   User[]    @relation("owner_rooms")
+  editors  User[]    @relation("creator_rooms")
+  messages Message[]
+  videos   Video[]
+}
+
+model Message {
+  id           String   @id @default(uuid())
+  content      String
+  created_at   DateTime @default(now())
+  sentToUserId String?
+  sentTo       User?    @relation("sent_messages", fields: [sentToUserId], references: [id])
+  sentByUserId String?
+  sentBy       User?    @relation("received_messages", fields: [sentByUserId], references: [id])
+  roomId       String?
+  room         Room?    @relation(fields: [roomId], references: [id])
+  groupMessage Boolean  @default(false)
+}
+
+model Video {
+  id           String   @id @default(uuid())
+  title        String?
+  description  String?
+  tags         String[]
+  size         String?
+  updatedAt    DateTime
+  thumbnailUrl String?
+  videoUrl     String?
+  roomId       String
+  room         Room     @relation(fields: [roomId], references: [id])
+  isEditable   Boolean  @default(true)
+}
+
+enum Status {
+  ONLINE
+  OFFLINE
+}

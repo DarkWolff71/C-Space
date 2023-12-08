@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
-import { RecoilRoot } from "recoil";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,12 +18,8 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark:dark">
       {/* <html lang="en" className="dark"> */}
-
       <body className={inter.className}>
-        {" "}
-        <RecoilRoot>
-          <Providers>{children} </Providers>
-        </RecoilRoot>
+        <Providers>{children} </Providers>
       </body>
     </html>
   );

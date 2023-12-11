@@ -20,6 +20,8 @@ model User {
   ownerRooms       Room[]    @relation("owner_rooms")
   sentMessages     Message[] @relation("sent_messages")
   receivedMessages Message[] @relation("received_messages")
+  sentRequests     Request[] @relation("sent_requests")
+  receivedRequests Request[] @relation("received_requests")
 }
 
 model Room {
@@ -29,6 +31,7 @@ model Room {
   editors  User[]    @relation("creator_rooms")
   messages Message[]
   videos   Video[]
+  requests Request[]
 }
 
 model Message {
@@ -56,6 +59,17 @@ model Video {
   roomId       String
   room         Room     @relation(fields: [roomId], references: [id])
   isEditable   Boolean  @default(true)
+}
+
+model Request {
+  id String @id @default(uuid())
+
+  fromUser   User   @relation("sent_requests", fields: [fromUserId], references: [id])
+  fromUserId String
+  toUser     User   @relation("received_requests", fields: [toUserId], references: [id])
+  toUserId   String
+  room       Room   @relation(fields: [roomId], references: [id])
+  roomId     String
 }
 
 enum Status {

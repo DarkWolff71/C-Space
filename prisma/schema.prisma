@@ -1,85 +1,3 @@
-// // This is your Prisma schema file,
-// // learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// generator client {
-//   provider = "prisma-client-js"
-// }
-
-// datasource db {
-//   provider = "postgresql"
-//   url      = env("DATABASE_URL")
-// }
-
-// model User {
-//   id               String    @id @default(uuid())
-//   name             String?
-//   userName         String?   @unique
-//   email            String    @unique
-//   password         String
-//   state            Status    @default(OFFLINE)
-//   creatorRooms     Room[]    @relation("creator_rooms")
-//   ownerRooms       Room[]    @relation("owner_rooms")
-//   sentMessages     Message[] @relation("sent_messages")
-//   receivedMessages Message[] @relation("received_messages")
-//   sentRequests     Request[] @relation("sent_requests")
-//   receivedRequests Request[] @relation("received_requests")
-// }
-
-// model Room {
-//   id       String    @id @default(uuid())
-//   name     String
-//   owners   User[]    @relation("owner_rooms")
-//   editors  User[]    @relation("creator_rooms")
-//   messages Message[]
-//   videos   Video[]
-//   requests Request[]
-// }
-
-// model Message {
-//   id           String   @id @default(uuid())
-//   content      String
-//   created_at   DateTime @default(now())
-//   sentToUserId String?
-//   sentTo       User?    @relation("sent_messages", fields: [sentToUserId], references: [id])
-//   sentByUserId String?
-//   sentBy       User?    @relation("received_messages", fields: [sentByUserId], references: [id])
-//   roomId       String?
-//   room         Room?    @relation(fields: [roomId], references: [id])
-//   groupMessage Boolean  @default(false)
-// }
-
-// model Video {
-//   id           String   @id @default(uuid())
-//   title        String?
-//   description  String?
-//   tags         String[]
-//   size         String?
-//   updatedAt    DateTime
-//   thumbnailUrl String?
-//   videoUrl     String?
-//   roomId       String
-//   room         Room     @relation(fields: [roomId], references: [id])
-//   isEditable   Boolean  @default(true)
-// }
-
-// model Request {
-//   id String @id @default(uuid())
-
-//   fromUser   User   @relation("sent_requests", fields: [fromUserId], references: [id])
-//   fromUserId String
-//   toUser     User   @relation("received_requests", fields: [toUserId], references: [id])
-//   toUserId   String
-//   room       Room   @relation(fields: [roomId], references: [id])
-//   roomId     String
-// }
-
-// enum Status {
-//   ONLINE
-//   OFFLINE
-// }
-
-// ================================================================================================================================
-
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
@@ -113,33 +31,34 @@ model Account {
 }
 
 model User {
-  id               String    @id @default(uuid())
-  name             String?
-  userName         String?   @unique
-  email            String?   @unique
-  password         String?
-  emailVerified    DateTime? @map("email_verified")
-  image            String?
-  accounts         Account[]
-  state            Status    @default(OFFLINE)
-  creatorRooms     Room[]    @relation("creator_rooms")
-  ownerRooms       Room[]    @relation("owner_rooms")
-  sentMessages     Message[] @relation("sent_messages")
-  receivedMessages Message[] @relation("received_messages")
-  sentRequests     Request[] @relation("sent_requests")
-  receivedRequests Request[] @relation("received_requests")
+  id                      String    @id @default(uuid())
+  name                    String?
+  userName                String?   @unique
+  email                   String?   @unique
+  password                String?
+  emailVerified           DateTime? @map("email_verified")
+  image                   String?
+  accounts                Account[]
+  state                   Status    @default(OFFLINE)
+  editorRooms             Room[]    @relation("creator_rooms")
+  ownerRooms              Room[]    @relation("owner_rooms")
+  sentMessages            Message[] @relation("sent_messages")
+  receivedMessages        Message[] @relation("received_messages")
+  sentRequests            Request[] @relation("sent_requests")
+  receivedRequests        Request[] @relation("received_requests")
+  approvalPendingRequests Request[] @relation("approval_pending_requests")
 
   @@map("users")
 }
 
 model Room {
-  id       String    @id @default(uuid())
-  name     String
-  owners   User[]    @relation("owner_rooms")
-  editors  User[]    @relation("creator_rooms")
-  messages Message[]
-  videos   Video[]
-  requests Request[]
+  id                String    @id @default(uuid())
+  name              String
+  owners            User[]    @relation("owner_rooms")
+  editors           User[]    @relation("creator_rooms")
+  messages          Message[]
+  unpublishedVideos Video[]
+  requests          Request[]
 }
 
 model Message {
@@ -170,14 +89,13 @@ model Video {
 }
 
 model Request {
-  id String @id @default(uuid())
-
-  fromUser   User   @relation("sent_requests", fields: [fromUserId], references: [id])
-  fromUserId String
-  toUser     User   @relation("received_requests", fields: [toUserId], references: [id])
-  toUserId   String
-  room       Room   @relation(fields: [roomId], references: [id])
-  roomId     String
+  id                      String @id @default(uuid())
+  fromRoom                Room   @relation(fields: [fromRoomId], references: [id])
+  fromRoomId              String
+  toUser                  User   @relation("received_requests", fields: [toUserId], references: [id])
+  toUserId                String
+  approvalPendingForUsers User[] @relation("approval_pending_requests")
+  sentForUsers            User[] @relation("sent_requests")
 }
 
 enum Status {

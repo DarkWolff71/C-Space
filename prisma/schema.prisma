@@ -31,34 +31,38 @@ model Account {
 }
 
 model User {
-  id                      String    @id @default(uuid())
-  name                    String?
-  userName                String?   @unique
-  email                   String?   @unique
-  password                String?
-  emailVerified           DateTime? @map("email_verified")
-  image                   String?
-  accounts                Account[]
-  state                   Status    @default(OFFLINE)
-  editorRooms             Room[]    @relation("creator_rooms")
-  ownerRooms              Room[]    @relation("owner_rooms")
-  sentMessages            Message[] @relation("sent_messages")
-  receivedMessages        Message[] @relation("received_messages")
-  sentRequests            Request[] @relation("sent_requests")
-  receivedRequests        Request[] @relation("received_requests")
-  approvalPendingRequests Request[] @relation("approval_pending_requests")
+  id                     String          @id @default(uuid())
+  name                   String?
+  userName               String?         @unique
+  email                  String?         @unique
+  password               String?
+  emailVerified          DateTime?       @map("email_verified")
+  image                  String?
+  accounts               Account[]
+  state                  Status          @default(OFFLINE)
+  editorRooms            Room[]          @relation("creator_rooms")
+  ownerRooms             Room[]          @relation("owner_rooms")
+  sentMessages           Message[]       @relation("sent_messages")
+  receivedMessages       Message[]       @relation("received_messages")
+  sentRequests           JoinRequest[]   @relation("sent_join_requests")
+  receivedRequests       JoinRequest[]   @relation("received_join_requests")
+  approvedJoinRequests   JoinRequest[]   @relation("approved_join_requests")
+  removeRequests         RemoveRequest[]
+  approvedRemoveRequests RemoveRequest[] @relation("approved_remove_requests")
+  approvedVideos         Video[]
 
   @@map("users")
 }
 
 model Room {
-  id                String    @id @default(uuid())
-  name              String
-  owners            User[]    @relation("owner_rooms")
-  editors           User[]    @relation("creator_rooms")
+  id                String          @id @default(uuid())
+  name              String          @unique
+  owners            User[]          @relation("owner_rooms")
+  editors           User[]          @relation("creator_rooms")
   messages          Message[]
   unpublishedVideos Video[]
-  requests          Request[]
+  joinRequests      JoinRequest[]
+  removeRequests    RemoveRequest[]
 }
 
 model Message {
@@ -75,27 +79,46 @@ model Message {
 }
 
 model Video {
-  id           String   @id @default(uuid())
-  title        String?
-  description  String?
-  tags         String[]
-  size         String?
-  updatedAt    DateTime
-  thumbnailUrl String?
-  videoUrl     String?
-  roomId       String
-  room         Room     @relation(fields: [roomId], references: [id])
-  isEditable   Boolean  @default(true)
+  id               String   @id @default(uuid())
+  title            String?
+  description      String?
+  tags             String[]
+  size             String?
+  updatedAt        DateTime
+  thumbnailUrl     String?
+  videoUrl         String?
+  roomId           String
+  room             Room     @relation(fields: [roomId], references: [id])
+  isEditable       Boolean  @default(true)
+  isApproved       Boolean
+  approvedByOwners User[]
 }
 
-model Request {
-  id                      String @id @default(uuid())
-  fromRoom                Room   @relation(fields: [fromRoomId], references: [id])
-  fromRoomId              String
-  toUser                  User   @relation("received_requests", fields: [toUserId], references: [id])
-  toUserId                String
-  approvalPendingForUsers User[] @relation("approval_pending_requests")
-  sentForUsers            User[] @relation("sent_requests")
+model JoinRequest {
+  id                 String  @id @default(uuid())
+  fromRoom           Room    @relation(fields: [fromRoomId], references: [id])
+  fromRoomId         String
+  toUser             User    @relation("received_join_requests", fields: [toUserId], references: [id])
+  toUserId           String
+  approvedByOwners   User[]  @relation("approved_join_requests")
+  sentForUsers       User[]  @relation("sent_join_requests")
+  isApprovedByOwners Boolean @default(false)
+  role               Role
+}
+
+model RemoveRequest {
+  id                 String  @id @default(uuid())
+  fromRoom           Room    @relation(fields: [fromRoomId], references: [id])
+  fromRoomId         String
+  toUser             User    @relation(fields: [toUserId], references: [id])
+  toUserId           String
+  approvedByOwners   User[]  @relation("approved_remove_requests")
+  isApprovedByOwners Boolean @default(false)
+}
+
+enum Role {
+  EDITOR
+  OWNER
 }
 
 enum Status {

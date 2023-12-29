@@ -11,7 +11,9 @@ import {
 } from "@nextui-org/react";
 import { useSetRecoilState } from "recoil";
 import { categoryIdState } from "@/recoil-store/atoms/upload-video";
-import { CATEGORY_LIST } from "@/lib/constants/videoCategories";
+import { getCategoryList } from "@/lib/constants/videoCategories";
+
+const CATEGORY_LIST = getCategoryList();
 
 export function CategoryListDropdown() {
   const categoryList = CATEGORY_LIST;
@@ -41,6 +43,7 @@ export function CategoryListDropdown() {
         </Button>
       </DropdownTrigger>
       <DropdownMenu
+        aria-label="Video category options"
         variant="flat"
         disallowEmptySelection
         selectionMode="single"

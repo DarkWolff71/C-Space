@@ -1,12 +1,15 @@
 import { getPrismaClient } from "@/lib/helpers/prisma";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
-import { authOptions } from "../../(authentication)/options";
+import { authOptions } from "../../(authentication)/auth/[...nextauth]/options";
 
 const prisma = getPrismaClient();
 
 export async function GET() {
+  console.log("line 9");
+  console.log(authOptions);
   const session = await getServerSession(authOptions);
+  console.log("session: ", session);
   if (!(session && session.user.email && session.user.roomName)) {
     return NextResponse.json({ error: "Unauthorised" }, { status: 401 });
   }
@@ -26,11 +29,16 @@ export async function GET() {
           privacyStatus: true,
           isEditable: true,
           isApproved: true,
-          videoFileName: true,
           videoFileSize: true,
           videoType: true,
           sentForApproval: true,
           // to check if the video is approved by the user
+          approvedByOwners: {
+            select: {
+              name: true,
+              email: true,
+            },
+          },
           _count: {
             select: {
               approvedByOwners: {

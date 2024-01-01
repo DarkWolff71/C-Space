@@ -28,6 +28,8 @@ import {
   videoTitle,
   videoUploadPercentage,
 } from "@/recoil-store/atoms/upload-video";
+import { ScrollArea } from "./shadcn/scroll-area";
+import { Separator } from "./shadcn/separator";
 
 type Props = {
   id: string;
@@ -45,6 +47,14 @@ type Props = {
   _count: {
     approvedByOwners: number;
   };
+  approvedByOwners: {
+    name: string;
+    email: string;
+  }[];
+  owners: {
+    name: string;
+    email: string;
+  }[];
 };
 
 export function UnpublishedVideoCard({
@@ -60,6 +70,8 @@ export function UnpublishedVideoCard({
   isEditable,
   sentForApproval,
   isApproved,
+  approvedByOwners,
+  owners,
   _count,
 }: Props) {
   let [isOpen, setIsOpen] = useState<boolean>(false);
@@ -117,7 +129,9 @@ export function UnpublishedVideoCard({
       window.location.reload();
     }
   }
-
+  const temptags = Array.from({ length: 50 }).map(
+    (_, i, a) => `v1.2.0-beta.${a.length - i}`
+  );
   async function handlePublish(
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) {
@@ -236,6 +250,54 @@ export function UnpublishedVideoCard({
                           {videoType}
                         </span>
                       </div>
+                      {!(ownersInCurrentRoomState === 1 || isApproved) ? (
+                        <>
+                          <div className="flex space-x-5 text-gray-800 dark:text-gray-300 pt-7">
+                            <div className="flex space-x-2">
+                              <div className="italic"> Approved by: </div>
+                              <ScrollArea className="max-h-72 w-48 rounded-md border dark:bg-black">
+                                <div className="p-4">
+                                  {approvedByOwners.map((user) => (
+                                    <>
+                                      <div key={user.email} className="text-sm">
+                                        {user.name}
+                                      </div>
+                                      <Separator className="my-2" />
+                                    </>
+                                  ))}
+                                </div>
+                              </ScrollArea>
+                            </div>
+                            <div className="flex space-x-2">
+                              <div className="italic">
+                                Approval pending by:{" "}
+                              </div>
+                              <ScrollArea className="max-h-72 w-48 rounded-md border dark:bg-black">
+                                <div className="p-4">
+                                  {owners &&
+                                    owners
+                                      .filter((user) => {
+                                        approvedByOwners.includes(user);
+                                      })
+                                      .map((user) => (
+                                        <>
+                                          <div
+                                            key={user.email}
+                                            className="text-sm"
+                                          >
+                                            {user.name}
+                                          </div>
+                                          <Separator className="my-2" />
+                                        </>
+                                      ))}
+                                </div>
+                              </ScrollArea>
+                            </div>
+                          </div>
+                        </>
+                      ) : (
+                        <></>
+                      )}
                     </div>
                   </>
                 ) : (

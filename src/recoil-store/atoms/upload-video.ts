@@ -40,6 +40,21 @@ export const isVideoFileChanged = atom<boolean>({
   default: false,
 });
 
+export const thumbnailFile = atom<File | null>({
+  key: "thumbnailFile",
+  default: null,
+});
+
+export const thumbnailFileUrl = atom<string>({
+  key: "thumbnailFileUrl",
+  default: "",
+});
+
+export const isThumbnailFileChanged = atom<boolean>({
+  key: "isThumbnailFileChanged",
+  default: false,
+});
+
 export const videoUploadPercentage = atom<number>({
   key: "videoUploadPercentage",
   default: 0,

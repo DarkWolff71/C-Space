@@ -315,9 +315,20 @@ const VIDEO_CATEGORY_LIST_API_RESPONSE = {
     },
   ],
 };
-export const CATEGORY_LIST = VIDEO_CATEGORY_LIST_API_RESPONSE.items.map(
-  (item) => ({
-    title: item.snippet.title,
-    id: item.id,
-  })
-);
+let CATEGORY_LIST:
+  | {
+      title: string;
+      id: string;
+    }[]
+  | undefined;
+export function getCategoryList() {
+  if (!CATEGORY_LIST) {
+    CATEGORY_LIST = VIDEO_CATEGORY_LIST_API_RESPONSE.items
+      .filter((item) => item.snippet.assignable)
+      .map((item) => ({
+        title: item.snippet.title,
+        id: item.id,
+      }));
+  }
+  return CATEGORY_LIST;
+}

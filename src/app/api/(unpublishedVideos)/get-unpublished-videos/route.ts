@@ -2,17 +2,20 @@ import { getPrismaClient } from "@/lib/helpers/prisma";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 import { authOptions } from "../../(authentication)/auth/[...nextauth]/options";
+import { GetObjectCommand } from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { getS3Instance } from "@/lib/helpers/s3Instance";
 
 const prisma = getPrismaClient();
+const s3 = getS3Instance();
 
 export async function GET() {
-  console.log("line 9");
-  console.log(authOptions);
   const session = await getServerSession(authOptions);
-  console.log("session: ", session);
+
   if (!(session && session.user.email && session.user.roomName)) {
     return NextResponse.json({ error: "Unauthorised" }, { status: 401 });
   }
+
   let dbResponse = await prisma.room.findUnique({
     where: {
       name: session.user.roomName,
@@ -25,20 +28,23 @@ export async function GET() {
           description: true,
           tags: true,
           categoryId: true,
-          thumbnailUrl: true,
           privacyStatus: true,
           isEditable: true,
           isApproved: true,
           videoFileSize: true,
           videoType: true,
+          videoFileName: true,
+          thumbnailSize: true,
+          thumbnailS3Key: true,
+          thumbnailType: true,
           sentForApproval: true,
-          // to check if the video is approved by the user
           approvedByOwners: {
             select: {
               name: true,
               email: true,
             },
           },
+          // to check if the video is approved by the user
           _count: {
             select: {
               approvedByOwners: {
@@ -53,7 +59,27 @@ export async function GET() {
     },
   });
 
+  const unpublishedVideos = await Promise.all(
+    (dbResponse?.unpublishedVideos || [])
+      .map(async (video) => {
+        if (video.thumbnailS3Key) {
+          const getObjectCommand = new GetObjectCommand({
+            Bucket: process.env.AWS_BUCKET_NAME,
+            Key: video.thumbnailS3Key,
+          });
+          const url = await getSignedUrl(s3, getObjectCommand, {
+            expiresIn: 60 * 60 * 16,
+          });
+
+          return { ...video, thumbnailUrl: url };
+        }
+
+        return video;
+      })
+      .filter(Boolean) // Filter out undefined values
+  );
+
   return NextResponse.json({
-    videos: dbResponse?.unpublishedVideos,
+    videos: unpublishedVideos,
   });
 }

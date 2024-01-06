@@ -37,12 +37,12 @@ export function RemoveFromRoomApprovalPendingRequest({
     await axios.post("http://localhost:3000/api/cancel-remove-request", {
       requestId,
     });
-    // window.location.reload();
     router.refresh();
     toast({
       description: "Cancelled remove request.",
     });
   }
+
   return (
     <FullWidthBg className="p-4 ">
       <div

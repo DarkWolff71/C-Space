@@ -27,24 +27,7 @@ export default async function ReceivedRequests() {
   }: GetReceivedRequestsResponse = await fetchData(
     "http://localhost:3000/api/get-received-requests"
   );
-  console.log("line 30", {
-    joinRequests,
-    joinRoomApproveRequests,
-    removeFromRoomApproveRequests,
-  });
-  // const receivedRequetsResponse = await axios.get(
-  //   "http://localhost:3000/api/get-received-requests",
-  //   {
-  //     headers: {
-  //       Cookie: getCookiesString(),
-  //     },
-  //   }
-  // );
-  // const {
-  //   joinRequests,
-  //   joinRoomApproveRequests,
-  //   removeFromRoomApproveRequests,
-  // }: GetReceivedRequestsResponse = receivedRequetsResponse.data;
+
   return (
     <>
       <PageContent title="Received Requests">

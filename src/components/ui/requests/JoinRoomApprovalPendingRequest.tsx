@@ -46,7 +46,6 @@ export function JoinRoomApprovalPendingRequest({
     await axios.post("http://localhost:3000/api/cancel-join-request", {
       requestId,
     });
-    // window.location.reload();
     router.refresh();
     toast({
       description: "Join request cancelled successfully.",

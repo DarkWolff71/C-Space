@@ -1,18 +1,17 @@
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 import { authOptions } from "../../(authentication)/auth/[...nextauth]/options";
-import { getPrismaClient } from "@/lib/prisma";
+import { getPrismaClient } from "@/lib/helpers/prisma";
+
+let prisma = getPrismaClient();
 
 export async function GET(req: NextRequest) {
-  console.log("I'm in route");
-  console.log(req.cookies.getAll());
-  let prisma = getPrismaClient();
   let session = await getServerSession(authOptions);
-  console.log("session: ", session);
-  console.log("I'm in route-------------");
+
   if (!session) {
     return NextResponse.json({ error: "Unauthorised" }, { status: 401 });
   }
+
   if (!session.user?.email) {
     return NextResponse.json(
       { error: "Unauthorised. Session does not contain email address" },

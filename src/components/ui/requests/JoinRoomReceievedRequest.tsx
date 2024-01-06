@@ -8,13 +8,14 @@ import { Role } from "@prisma/client";
 import { ScrollArea } from "../shadcn/scroll-area";
 import { Separator } from "../shadcn/separator";
 import { useToast } from "../shadcn/use-toast";
+import { useRouter } from "next/navigation";
 
 type Props = {
   requestId: string;
   roomName: string;
   role: Role;
-  editors: {name:string, email:string}[];
-  owners: {name:string, email:string}[];
+  editors: { name: string; email: string }[];
+  owners: { name: string; email: string }[];
 };
 
 export function JoinRoomReceievedRequest({
@@ -25,11 +26,13 @@ export function JoinRoomReceievedRequest({
   editors,
 }: Props) {
   const { toast } = useToast();
+  const router = useRouter();
 
   async function handleAccept() {
     await axios.post("http://localhost:3000/api/accept-join-request", {
       requestId,
     });
+    router.refresh();
     toast({
       description: "Accepted join request.",
     });
@@ -39,6 +42,7 @@ export function JoinRoomReceievedRequest({
     await axios.post("http://localhost:3000/api/cancel-join-request", {
       requestId,
     });
+    router.refresh();
     toast({
       description: "Rejected join request.",
     });

@@ -20,6 +20,7 @@ import {
 import { useSession } from "next-auth/react";
 import axios from "axios";
 import { useToast } from "./shadcn/use-toast";
+import { useRouter } from "next/navigation";
 
 enum Role {
   OWNER,
@@ -33,6 +34,7 @@ type Props = {
 };
 
 export function RoomMembersByRole({ members, role, ownersCount }: Props) {
+  const router = useRouter();
   let [filteredMembersList, setFilteredMembersList] = useState(members);
   let [searchInputValue, setSearchInputValue] = useState<string>("");
   let [memberEmail, setMemberEmail] = useState("");
@@ -100,7 +102,8 @@ export function RoomMembersByRole({ members, role, ownersCount }: Props) {
         userEmail: memberEmail,
       }
     );
-    window.location.reload();
+    router.refresh();
+    //window.location.reload();
     if (response.data.message == "success") {
       toast({
         description: "Succesfully removed.",

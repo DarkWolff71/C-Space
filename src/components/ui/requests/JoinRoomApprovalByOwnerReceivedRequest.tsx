@@ -37,22 +37,22 @@ export function JoinRoomApprovalByOwnerReceivedRequest({
     await axios.post("http://localhost:3000/api/approve-join-request", {
       requestId,
     });
-    // window.location.reload();
     router.refresh();
     toast({
       description: "Approved join request.",
     });
   }
+
   async function handleReject() {
     await axios.post("http://localhost:3000/api/cancel-join-request", {
       requestId,
     });
-    // window.location.reload();
     router.refresh();
     toast({
       description: "Rejected join request.",
     });
   }
+
   return (
     <>
       <FullWidthBg className="p-4 ">
@@ -66,7 +66,7 @@ export function JoinRoomApprovalByOwnerReceivedRequest({
               }.`}
             </p>
             <div className="flex space-x-3 items-center">
-              <p>{`Show editors: `}</p>{" "}
+              <p>{`Show editors: `}</p>
               {displayEditors ? (
                 <DoneRoundedIcon
                   fontSize="medium"

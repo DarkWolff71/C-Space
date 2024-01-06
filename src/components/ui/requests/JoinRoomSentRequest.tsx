@@ -34,7 +34,6 @@ export function JoinRoomSentRequest({
     await axios.post("http://localhost:3000/api/cancel-join-request", {
       requestId,
     });
-    // window.location.reload();
     router.refresh();
     toast({
       description: "Cancelled join request.",
@@ -50,10 +49,10 @@ export function JoinRoomSentRequest({
                 toUser.email
               }) to join this room (${session?.user.roomName}) as ${
                 role === Role.EDITOR ? "editor" : "owner"
-              }.`}{" "}
+              }.`}
             </p>
             <div className="flex space-x-3 items-center">
-              <p>{`Show editors: `}</p>{" "}
+              <p>{`Show editors: `}</p>
               {displayEditors ? (
                 <DoneRoundedIcon
                   fontSize="medium"

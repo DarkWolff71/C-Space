@@ -1,11 +1,54 @@
 import { NextRequest, NextResponse } from "next/server";
 import { joinRoomRequestValidator } from "@/validators/joinRoomRequestValidator";
-import { getPrismaClient } from "@/lib/prisma";
+import { getPrismaClient } from "@/lib/helpers/prisma";
 import { authOptions } from "../../../(authentication)/auth/[...nextauth]/options";
 import { getServerSession } from "next-auth";
 import { Role } from "@prisma/client";
 
 let prisma = getPrismaClient();
+
+async function isMemberAlreadyAdded(
+  roomName: string,
+  userEmail: string,
+  role: Role
+) {
+  let selectQuery;
+  if (role === Role.EDITOR) {
+    selectQuery = {
+      editors: {
+        where: {
+          email: userEmail,
+        },
+      },
+    };
+  } else {
+    selectQuery = {
+      owners: {
+        where: {
+          email: userEmail,
+        },
+      },
+    };
+  }
+  let dbResponse = await prisma.room.findUnique({
+    where: {
+      name: roomName,
+    },
+    select: {
+      _count: {
+        select: selectQuery,
+      },
+    },
+  });
+  if (
+    //@ts-ignore
+    (dbResponse?._count.owners ?? 0) + (dbResponse?._count.editors ?? 0) ===
+    1
+  ) {
+    return true;
+  }
+  return false;
+}
 
 export async function POST(req: NextRequest) {
   let parsedRequest = joinRoomRequestValidator.safeParse(await req.json());
@@ -54,6 +97,18 @@ export async function POST(req: NextRequest) {
   ]);
 
   if (
+    await isMemberAlreadyAdded(
+      session.user.roomName,
+      toUserEmail,
+      role === "editor" ? Role.EDITOR : Role.OWNER
+    )
+  ) {
+    return NextResponse.json(
+      { error: "User is already added." },
+      { status: 400 }
+    );
+  }
+  if (
     !((validateOwner?._count.owners ?? 0) === 1 && ownersCount?._count.owners)
   ) {
     return NextResponse.json(
@@ -88,5 +143,7 @@ export async function POST(req: NextRequest) {
     });
   }
 
-  return NextResponse.json({ message: "Succefully created the join request." });
+  return NextResponse.json({
+    message: "Successfully created the join request.",
+  });
 }

@@ -8,6 +8,7 @@ declare module "next-auth" {
     user: {
       roomName?: string;
       role?: string;
+      ownersInCurrentRoom?: number;
     } & DefaultSession["user"];
   }
 }

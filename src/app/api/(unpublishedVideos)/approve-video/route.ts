@@ -2,7 +2,7 @@ import { getPrismaClient } from "@/lib/helpers/prisma";
 import { approveVideoRequestValidator } from "@/validators/unpublishedVideosValidator";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
-import { authOptions } from "../../(authentication)/options";
+import { authOptions } from "../../(authentication)/auth/[...nextauth]/options";
 
 const prisma = getPrismaClient();
 
@@ -11,6 +11,7 @@ export async function POST(req: NextRequest) {
     await req.json()
   );
   const session = await getServerSession(authOptions);
+
   if (
     !(
       validatedRequest.success === true &&
@@ -21,6 +22,7 @@ export async function POST(req: NextRequest) {
   ) {
     return NextResponse.json({ error: "Invalid request" }, { status: 400 });
   }
+
   const verifyWithDb = await prisma.room.findUnique({
     where: {
       name: session.user.roomName,
@@ -42,6 +44,7 @@ export async function POST(req: NextRequest) {
       },
     },
   });
+
   if (
     !(
       verifyWithDb?._count.owners === 1 &&
@@ -50,6 +53,7 @@ export async function POST(req: NextRequest) {
   ) {
     return NextResponse.json({ error: "Invalid request" }, { status: 400 });
   }
+
   const approvedOwnersCountPromise = prisma.video.update({
     where: {
       id: validatedRequest.data.videoId,
@@ -87,6 +91,7 @@ export async function POST(req: NextRequest) {
     ownersCountPromise,
     approvedOwnersCountPromise,
   ]);
+
   if (
     ownersCount?._count.owners === approvedOwnersCount._count.approvedByOwners
   ) {

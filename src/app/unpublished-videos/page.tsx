@@ -1,11 +1,9 @@
 import { PageContent, UnpublishedVideoCard } from "@/components/ui";
 import { getCookiesString } from "@/lib/helpers/cookiesString";
 import { GetUnpublishedVideosResponse } from "@/types/response";
-import axios from "axios";
 import { getServerSession } from "next-auth";
 import React from "react";
 import { authOptions } from "../api/(authentication)/auth/[...nextauth]/options";
-// import { roleInCurrentRoom } from "@/recoil-store/atoms/members";
 import { Role } from "@/lib/constants/roles";
 import { VideoPrivacyStatus } from "@prisma/client";
 
@@ -30,18 +28,6 @@ async function fetchData(url: string) {
   return response.json();
 }
 
-async function getData() {
-  let videosPromise = axios.get(
-    "http://localhost:3000/api/get-unpublished-videos"
-  );
-  let ownersPromise = axios.get("http://localhost:3000/api/get-room-owners");
-  let [videosResponse, ownersResponse] = await Promise.all([
-    videosPromise,
-    ownersPromise,
-  ]);
-  return { videos: videosResponse.data, owners: ownersResponse.data };
-}
-
 export default async function page() {
   const videosData = fetchData(
     "http://localhost:3000/api/get-unpublished-videos"
@@ -62,18 +48,6 @@ export default async function page() {
   const roleInCurrentRoom =
     session?.user.role === "editor" ? Role.EDITOR : Role.OWNER;
   const ownersInCurrentRoom = session?.user.ownersInCurrentRoom;
-  // let {
-  //   videos,
-  //   owners,
-  // }: {
-  //   videos: GetUnpublishedVideosResponse;
-  //   owners: {
-  //     owners: {
-  //       name: string;
-  //       email: string;
-  //     }[];
-  //   } | null;
-  // } = await getData();
 
   return (
     <>
@@ -92,27 +66,6 @@ export default async function page() {
             );
           })}
         </div>
-        {/* <UnpublishedVideoCard
-          {...{
-            id: ",",
-            title: "Title",
-            description: " string | null",
-            tags: ["vg"],
-            thumbnailUrl: "",
-            videoType: null,
-            videoFileSize: null,
-            privacyStatus: "private",
-            categoryId: null,
-            isEditable: true,
-            sentForApproval: null,
-            isApproved: false,
-            _count: {
-              approvedByOwners: 2,
-            },
-            owners: [],
-            approvedByOwners: [],
-          }}
-        ></UnpublishedVideoCard> */}
       </PageContent>
     </>
   );

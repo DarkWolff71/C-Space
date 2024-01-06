@@ -16,21 +16,15 @@ import {
   useDisclosure,
 } from "@nextui-org/react";
 import DoneRoundedIcon from "@mui/icons-material/DoneRounded";
-import axios, { AxiosResponse } from "axios";
-import { getMembersResponse } from "@/types/response";
-import { useRecoilValue } from "recoil";
-import { ownersInCurrentRoom } from "@/recoil-store/atoms/members";
+import axios from "axios";
+import { GetMembersResponse } from "@/types/response";
 import { useSession } from "next-auth/react";
 import { FullWidthBg } from ".";
 import { toast } from "./shadcn/use-toast";
-// type Props = {
-//   searchInputValue: string;
-// };
 
-// export function MemberSearchResults({ searchInputValue }: Props) {
 export function MembersSearch() {
   let { data: session } = useSession();
-  let [searchResults, setSearchResults] = useState<getMembersResponse>();
+  let [searchResults, setSearchResults] = useState<GetMembersResponse>();
   const {
     isOpen: isModalOpen,
     onOpen: onModalOpen,
@@ -47,7 +41,6 @@ export function MembersSearch() {
     useState(false);
   let [searchInputValue, setSearchInputValue] = useState<string>("");
   let [showSearchResults, setShowSearchResults] = useState(false);
-  let ownersInCurrentRoomValue = useRecoilValue(ownersInCurrentRoom);
 
   let isSearchResultsEmpty = (): boolean => {
     return (
@@ -104,7 +97,7 @@ export function MembersSearch() {
               []),
             toUser,
           ],
-        } as getMembersResponse | undefined)
+        } as GetMembersResponse | undefined)
     );
     toast({
       description: "Request sent.",
@@ -243,8 +236,8 @@ export function MembersSearch() {
                           color="primary"
                         />
                       </div>
-                      {ownersInCurrentRoomValue &&
-                      ownersInCurrentRoomValue > 1 ? (
+                      {session?.user.ownersInCurrentRoom &&
+                      session?.user.ownersInCurrentRoom > 1 ? (
                         <p className="text-xs m-5 border-1 border-gray-600 rounded-lg p-3">
                           {
                             "As there are more than one owner for the current room, all the owners other than you for this room will receive a request to approve the joining of the user. On the approval of every owner, the request will reach the user."
@@ -382,18 +375,6 @@ export function MembersSearch() {
                       </li>
                     );
                   })}
-                  {/* <li>
-              <div className="inline-flex items-center justify-between w-full px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white hover:rounded-lg">
-                <div className="flex gap-4 items-center">
-                  <Avatar src={imageUrl} size="md" />
-                  <div>{name}</div>
-                </div>
-                <div>
-                  <Button className="dark:bg-black">Add</Button>
-                </div>
-              </div>
-              <Separator></Separator>
-            </li> */}
                 </ul>
               </div>
             </ScrollArea>

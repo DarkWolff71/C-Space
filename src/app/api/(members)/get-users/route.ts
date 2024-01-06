@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getPrismaClient } from "@/lib/prisma";
+import { getPrismaClient } from "@/lib/helpers/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../(authentication)/auth/[...nextauth]/options";
 
+const prisma = getPrismaClient();
+
 export async function GET(req: NextRequest) {
-  console.log("in get-users route");
   let session = await getServerSession(authOptions);
   if (!(session && session.user.name && session.user.roomName))
     return NextResponse.json(
@@ -15,9 +16,6 @@ export async function GET(req: NextRequest) {
   if (!requestInput) {
     return NextResponse.json({ error: "Invalid input." }, { status: 400 });
   }
-  let prisma = getPrismaClient();
-
-  let userEmail = session?.user.email;
 
   let usersInDifferentRoomsAndRequestHasNotBeenSentPromise =
     prisma.user.findMany({
@@ -220,13 +218,7 @@ export async function GET(req: NextRequest) {
       editorsInSameRoomAndRequestHasNotBeenSentPromise,
       editorsInSameRoomAndRequestHasBeenSentPromise,
     ]);
-    console.log({
-      usersInDifferentRoomsAndRequestHasBeenSent,
-      usersInDifferentRoomsAndRequestHasNotBeenSent,
-      ownersInSameRoom,
-      editorsInSameRoomAndRequestHasBeenSent,
-      editorsInSameRoomAndRequestHasNotBeenSent,
-    });
+
     return NextResponse.json({
       usersInDifferentRoomsAndRequestHasBeenSent,
       usersInDifferentRoomsAndRequestHasNotBeenSent,

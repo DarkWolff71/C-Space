@@ -14,21 +14,10 @@ async function fetchData(url: string) {
 }
 
 export default async function SentRequests() {
-  // console.log("line 7");
-  // let sentRequestsResponse = await axios.get(
-  //   "http://localhost:3000/api/get-sent-requests",
-  //   {
-  //     headers: {
-  //       Cookie: getCookiesString(),
-  //     },
-  //   }
-  // );
-  // console.log("line 10: ", sentRequestsResponse.data);
-
   let { requests: sentRequests }: GetSentRequestsResponse = await fetchData(
     "http://localhost:3000/api/get-sent-requests"
   );
-  // console.log("line 12: ", sentRequestsResponse.data.requests);
+
   return (
     <PageContent title="Sent Requests">
       <div className="space-y-4">

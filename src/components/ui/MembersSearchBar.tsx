@@ -1,13 +1,16 @@
 "use client";
 
 import React, { useState } from "react";
+// import { MemberSearchResults isSearchResultsEmpty} from "./MemberSearchResults";
 
-type Props = {
-  handleSearch: (inputValue: string) => void;
-};
-
-export  function MembersSearchBar({ handleSearch }: Props) {
+export function MembersSearchBar() {
   let [inputValue, setInputValue] = useState<string>("");
+  let [showSearchResults, setShowSearchStateResults] = useState(false);
+
+  let handleSearch = async (inputValue: string) => {
+    setShowSearchStateResults(true);
+  };
+
   let handleEnterKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       handleSearch(inputValue);
@@ -38,7 +41,6 @@ export  function MembersSearchBar({ handleSearch }: Props) {
           id="search"
           className="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           placeholder={"Search by user-name or email address..."}
-          required
           onKeyDown={handleEnterKeyPress}
           onChange={(e) => setInputValue(e.target.value)}
         />

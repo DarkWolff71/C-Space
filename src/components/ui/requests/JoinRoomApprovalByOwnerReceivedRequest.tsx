@@ -9,6 +9,7 @@ import { Role } from "@prisma/client";
 import DoneRoundedIcon from "@mui/icons-material/DoneRounded";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import { useToast } from "../shadcn/use-toast";
+import { useRouter } from "next/navigation";
 
 type Props = {
   requestId: string;
@@ -30,12 +31,14 @@ export function JoinRoomApprovalByOwnerReceivedRequest({
 }: Props) {
   const { data: session } = useSession();
   const { toast } = useToast();
+  const router = useRouter();
 
   async function handleAccept() {
     await axios.post("http://localhost:3000/api/approve-join-request", {
       requestId,
     });
-    window.location.reload();
+    // window.location.reload();
+    router.refresh();
     toast({
       description: "Approved join request.",
     });
@@ -44,7 +47,8 @@ export function JoinRoomApprovalByOwnerReceivedRequest({
     await axios.post("http://localhost:3000/api/cancel-join-request", {
       requestId,
     });
-    window.location.reload();
+    // window.location.reload();
+    router.refresh();
     toast({
       description: "Rejected join request.",
     });

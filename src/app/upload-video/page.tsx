@@ -12,7 +12,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { Button } from "@nextui-org/react";
 import axios from "axios";
 import { cn } from "../../lib/utils";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import {
   categoryIdState,
   isThumbnailFileChanged,
@@ -49,9 +49,6 @@ const supportedVideoFormats = [
 const supportedThumbnailFormats = [".jpg", ".jpeg", ".png"];
 
 export default function Videos() {
-  let [filesPendingToBeUploaded, setFilesPendingToBeUploaded] = useState<
-    number[]
-  >([1]);
   let titleInputRef = useRef<HTMLTextAreaElement | null>(null);
   let descriptionInputRef = useRef<HTMLTextAreaElement | null>(null);
   let tagsInputRef = useRef<HTMLTextAreaElement | null>(null);
@@ -61,14 +58,11 @@ export default function Videos() {
   let tagsState = useRecoilValue(videoTags);
   let titleState = useRecoilValue(videoTitle);
   let descriptionState = useRecoilValue(videoDescription);
-  let [isVideoFileChangedState, setIsVideoFileChangedState] =
-    useRecoilState(isVideoFileChanged);
+  let isVideoFileChangedState = useRecoilValue(isVideoFileChanged);
   let videoIdState = useRecoilValue(videoId);
-  let [videoFileState, setVideoFileState] = useRecoilState(videoFile);
-  let [isThumbnailFileChangedState, setIsThumbnailFileChangedState] =
-    useRecoilState(isThumbnailFileChanged);
-  let [thumbnailFileState, setThumbnailFileState] =
-    useRecoilState(thumbnailFile);
+  let videoFileState = useRecoilValue(videoFile);
+  let isThumbnailFileChangedState = useRecoilValue(isThumbnailFileChanged);
+  let thumbnailFileState = useRecoilValue(thumbnailFile);
   let [videoUploadedPercentage, setVideoUploadedPercentage] = useRecoilState(
     videoUploadPercentage
   );
@@ -98,10 +92,6 @@ export default function Videos() {
         setTagsInputWarning(true);
       }
     }
-    console.log("line 100: ", titleInputRef.current?.value);
-    console.log("line 101: ", descriptionInputRef.current?.value);
-    console.log("line 102: ", tagsInputRef.current?.value);
-
     let createUploadRequestBody: CreateUploadVideoRequestBodyType = {
       title: titleInputRef.current?.value,
       description: descriptionInputRef.current?.value,
@@ -128,22 +118,17 @@ export default function Videos() {
           },
         }),
     };
-    console.log("line 108: ", createUploadRequestBody);
     let createUploadVideoResponse = await axios.post(
       "/api/create-upload-video",
       createUploadRequestBody
     );
-    console.log("line 108: ", createUploadVideoResponse.data);
 
     if (
       createUploadVideoResponse.data.thumbnailPresignedUrl &&
       thumbnailFileState
     ) {
-      console.log("line 109:  ", thumbnailFileState);
       const presignedUrl = createUploadVideoResponse.data.thumbnailPresignedUrl;
-      console.log("line 110:  ", presignedUrl);
       axios.put(presignedUrl, thumbnailFileState);
-      console.log("line 111:  ", presignedUrl);
     }
 
     if (createUploadVideoResponse.data.partSignedUrlList) {
@@ -204,12 +189,9 @@ export default function Videos() {
             100) /
             (partSignedUrlList.length * 100)
         );
-        console.log("line 174:, ", uploadPercentagePartsArr);
-        console.log("line 175:, ", partSignedUrlList.length * 100);
         if (videoUploadedPercentage != sum) {
           setVideoUploadedPercentage(sum);
         }
-        console.log("line 174:, ", sum);
       }, 1000);
 
       await Promise.all(uploadFuncExecPromList);
@@ -222,20 +204,7 @@ export default function Videos() {
         parts: partInfoList,
       });
     }
-    // setVideoFileState(null);
-    // setVideoUploadedPercentage(0);
-    // setIsVideoFileChanged(false);
-    // if (titleInputRef.current) {
-    //   titleInputRef.current.value = "";
-    // }
-    // if (descriptionInputRef.current) {
-    //   descriptionInputRef.current.value = "";
-    // }
-    // if (tagsInputRef.current) {
-    //   tagsInputRef.current.value = "";
-    // }
     router.refresh();
-    // router.push("/unpublished-videos");
     toast({
       description: "Successfully saved to unpublished videos!!",
     });
@@ -294,11 +263,7 @@ export default function Videos() {
                   Upload a thumbnail:
                 </label>
                 <ThumbnailUpload
-                  className={`m-2 ${
-                    filesPendingToBeUploaded.length > 0
-                      ? "max-h-[26vh]"
-                      : "max-h-[26vh]"
-                  }`}
+                  className={`m-2 max-h-[26vh]`}
                   supportedTypes="JPG or PNG (MAX. 2MB)"
                   acceptedFileFormats={supportedThumbnailFormats}
                 ></ThumbnailUpload>

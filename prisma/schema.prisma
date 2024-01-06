@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -32,9 +29,9 @@ model Account {
 
 model User {
   id                     String          @id @default(uuid())
-  name                   String?
+  name                   String
   userName               String?         @unique
-  email                  String?         @unique
+  email                  String          @unique
   password               String?
   emailVerified          DateTime?       @map("email_verified")
   image                  String?
@@ -74,46 +71,59 @@ model Message {
   sentByUserId String?
   sentBy       User?    @relation("received_messages", fields: [sentByUserId], references: [id])
   roomId       String?
-  room         Room?    @relation(fields: [roomId], references: [id])
+  room         Room?    @relation(fields: [roomId], references: [id], onDelete: Cascade)
   groupMessage Boolean  @default(false)
 }
 
 model Video {
-  id               String   @id @default(uuid())
+  id               String             @id @default(uuid())
   title            String?
   description      String?
   tags             String[]
-  size             String?
   updatedAt        DateTime
-  thumbnailUrl     String?
-  videoUrl         String?
+  thumbnailSize    Int?
+  thumbnailType    String?
+  thumbnailS3Key   String?
+  videoFileName    String?
+  videoS3Key       String?
+  videoType        String?
+  videoFileSize    Int?
+  privacyStatus    VideoPrivacyStatus @default(PRIVATE)
+  categoryId       String?
   roomId           String
-  room             Room     @relation(fields: [roomId], references: [id])
-  isEditable       Boolean  @default(true)
+  room             Room               @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  isEditable       Boolean            @default(true)
+  sentForApproval  Boolean?
   isApproved       Boolean
   approvedByOwners User[]
 }
 
 model JoinRequest {
   id                 String  @id @default(uuid())
-  fromRoom           Room    @relation(fields: [fromRoomId], references: [id])
+  fromRoom           Room    @relation(fields: [fromRoomId], references: [id], onDelete: Cascade)
   fromRoomId         String
-  toUser             User    @relation("received_join_requests", fields: [toUserId], references: [id])
+  toUser             User    @relation("received_join_requests", fields: [toUserId], references: [id], onDelete: Cascade)
   toUserId           String
   approvedByOwners   User[]  @relation("approved_join_requests")
   sentForUsers       User[]  @relation("sent_join_requests")
   isApprovedByOwners Boolean @default(false)
+  displayOwners      Boolean
+  displayEditors     Boolean
   role               Role
+
+  @@unique([fromRoomId, toUserId, role], name: "unique_join_request")
 }
 
 model RemoveRequest {
   id                 String  @id @default(uuid())
-  fromRoom           Room    @relation(fields: [fromRoomId], references: [id])
+  fromRoom           Room    @relation(fields: [fromRoomId], references: [id], onDelete: Cascade)
   fromRoomId         String
-  toUser             User    @relation(fields: [toUserId], references: [id])
+  toUser             User    @relation(fields: [toUserId], references: [id], onDelete: Cascade)
   toUserId           String
   approvedByOwners   User[]  @relation("approved_remove_requests")
   isApprovedByOwners Boolean @default(false)
+
+  @@unique([fromRoomId, toUserId], name: "unique_remove_request")
 }
 
 enum Role {
@@ -124,4 +134,10 @@ enum Role {
 enum Status {
   ONLINE
   OFFLINE
+}
+
+enum VideoPrivacyStatus {
+  PUBLIC
+  PRIVATE
+  UNLISTED
 }

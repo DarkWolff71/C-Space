@@ -13,10 +13,14 @@ import {
   Button,
   useDisclosure,
 } from "@nextui-org/react";
-import { useRecoilState, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import {
+  isVideoAlreadyPresent,
   isVideoFileChanged,
   videoFile,
+  videoFileSize,
+  videoFileType,
+  videoUploadPercentage,
 } from "@/recoil-store/atoms/upload-video";
 
 type Props = {
@@ -40,8 +44,13 @@ export function FileUpload({
   } = useDisclosure();
 
   let [fileState, setFileState] = useRecoilState(videoFile);
-  let [videoUploadedPercentage, setVideoUploadedPercentage] = useState(0);
+  let [videoUploadedPercentage, setVideoUploadedPercentage] = useRecoilState(
+    videoUploadPercentage
+  );
   let setIsVideoFileChangedState = useSetRecoilState(isVideoFileChanged);
+  let isVideoAlreadyPresentState = useRecoilValue(isVideoAlreadyPresent);
+  let videoFileSizeState = useRecoilValue(videoFileSize);
+  let videoFileTypeState = useRecoilValue(videoFileType);
 
   function convertBytes(bytes: number): string {
     const kilobyte = 1024;
@@ -81,10 +90,14 @@ export function FileUpload({
 
   const handleRemoveFile = () => {
     setFileState(null);
-    setIsVideoFileChangedState(true);
+    if (isVideoAlreadyPresentState) {
+      setIsVideoFileChangedState(true);
+    } else {
+      setIsVideoFileChangedState(false);
+    }
     setVideoUploadedPercentage(0);
   };
-
+  console.log("in file upload");
   return (
     <>
       {!!fileState ? (
@@ -138,10 +151,14 @@ export function FileUpload({
               </p>
             </div>
             <div className=" flex items-center p-4 py-6">
-              <p>{convertBytes(fileState?.size ?? 0)}</p>
+              <p>
+                {fileState?.type
+                  ? convertBytes(fileState?.size ?? 0)
+                  : convertBytes(videoFileSizeState ?? 0)}
+              </p>
             </div>
             <div className=" flex items-center p-4 py-6">
-              <p>{fileState?.type}</p>
+              <p>{fileState?.type ? fileState?.type : videoFileTypeState}</p>
             </div>
             <div className=" flex items-center p-4 py-6">
               {videoUploadedPercentage === 0 ? (
@@ -153,15 +170,16 @@ export function FileUpload({
                 <Progress
                   size="md"
                   radius="sm"
+                  className="bg-gray"
                   classNames={{
                     base: "max-w-md",
                     track: "drop-shadow-md border border-default",
-                    indicator: "bg-gradient-to-r from-gray-800 to-gray-100",
+                    indicator: "bg-gradient-to-r from-gray-500 to-gray-50",
                     label: "tracking-wider font-medium text-default-600",
                     value: "text-foreground/60",
                   }}
                   label={100 ? "Uploading" : "Uploaded"}
-                  value={65}
+                  value={videoUploadedPercentage}
                   showValueLabel={true}
                 />
               )}

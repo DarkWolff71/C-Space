@@ -6,12 +6,9 @@ import { authOptions } from "../../(authentication)/auth/[...nextauth]/options";
 const prisma = getPrismaClient();
 
 export async function GET() {
-  console.log("lineeeeeeeeeeeeeeeeee");
   const session = await getServerSession(authOptions);
-  console.log("line 9 in rooms: ", session);
 
   if (!(session && session.user.roomName && session.user.email)) {
-    console.log("line 11 in rooms: ");
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -28,5 +25,6 @@ export async function GET() {
       },
     },
   });
-  return NextResponse.json({ dbResponse });
+
+  return NextResponse.json({ owners: dbResponse?.owners });
 }

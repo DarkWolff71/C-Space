@@ -12,6 +12,7 @@ export async function POST(req: NextRequest) {
     await req.json()
   );
   const session = await getServerSession(authOptions);
+
   if (!(validatedRequest.success === true && session && session.user.email)) {
     return NextResponse.json({ error: "Invalid request" }, { status: 400 });
   }
@@ -49,9 +50,10 @@ export async function POST(req: NextRequest) {
       },
       data: updatedData,
     });
-    await prisma.room.delete({
+    await prisma.joinRequest.delete({
       where: { id: validatedRequest.data.requestId },
     });
   }
+
   return NextResponse.json({});
 }

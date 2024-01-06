@@ -10,7 +10,7 @@ import DoneRoundedIcon from "@mui/icons-material/DoneRounded";
 import axios from "axios";
 import Cookies from "js-cookie";
 
-import { RedirectType, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { toast } from "./shadcn/use-toast";
 import {
   categoryIdState,
@@ -132,7 +132,6 @@ export function UnpublishedVideoCard({
       videoId: id,
     });
     router.refresh();
-    //window.location.reload();
   }
 
   function handleSendForApproval(
@@ -142,7 +141,6 @@ export function UnpublishedVideoCard({
       videoId: id,
     });
     router.refresh();
-    //window.location.reload();
   }
 
   async function handleEdit(
@@ -164,12 +162,8 @@ export function UnpublishedVideoCard({
       setIsThumbnailFileChangedState(false);
       setIsVideoFileChangedState(false);
       if (videoFileName) {
-        console.log("line 159 in unpub card");
         const blob = new Blob(["Dummy file"], { type: "text/plain" });
         const dummyFile = new File([blob], videoFileName);
-        console.log("line 160 in unpub card", dummyFile);
-        console.log("line 161 in unpub card", videoType);
-        console.log("line 162 in unpub card", videoSize);
 
         setvideoFileState(dummyFile);
         setVideoFileTypeState(videoType);
@@ -196,7 +190,6 @@ export function UnpublishedVideoCard({
       }
       router.push("/upload-video");
     } else {
-      // window.location.reload();
       router.refresh();
     }
   }
@@ -207,28 +200,17 @@ export function UnpublishedVideoCard({
     setIsPusblishingState(true);
     const ytTokenCookie = Cookies.get("yt-token");
     if (ytTokenCookie) {
-      console.log("line 206 in unpub card");
       await axios.post("http://localhost:3000/api/publish-video", {
         videoId: id,
         ytToken: JSON.parse(decodeURIComponent(ytTokenCookie)),
       });
-      console.log("line 211 in unpub card");
+      toast({
+        description: "Successfully published to Youtube!!",
+      });
     } else {
-      console.log("line 213 in unpub card");
-
       let response = await axios.get("http://localhost:3000/api/get-yt-token");
-      console.log("line 216 in unpub card");
-
       router.push(response.data.url);
-      // await axios.post("http://localhost:3000/api/publish-video", {
-      //   videoId: id,
-      //   ytToken: Cookies.get("yt-token"),
-      // });
     }
-    // window.location.reload();
-    toast({
-      description: "Successfully published to Youtube!!",
-    });
     setIsPusblishingState(false);
   }
 

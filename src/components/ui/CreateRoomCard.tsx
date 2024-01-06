@@ -23,7 +23,6 @@ type Props = {
 
 export function CreateRoomCard({ className }: Props) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  const [modalPlacement, setModalPlacement] = React.useState("auto");
   const router = useRouter();
   let [isInvalidInput, setIsInvalidInput] = useState<boolean>(false);
   let [createRoomButtonDisabled, setCreateRoomButtonDisabled] =
@@ -69,6 +68,8 @@ export function CreateRoomCard({ className }: Props) {
       });
       if (result.data.alreadyExists) {
         setRoomNameAlreadyExists(true);
+        setIsCreatingRoom(false);
+        return;
       }
     } catch (error) {
       // TODO: find if a better way exists for handling the error here
@@ -84,7 +85,10 @@ export function CreateRoomCard({ className }: Props) {
   return (
     <>
       <div
-        onClick={onOpen}
+        onClick={() => {
+          setRoomNameAlreadyExists(false);
+          onOpen();
+        }}
         className={cn(
           "block p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 cursor-pointer h-[15%] font-normal text-gray-700 dark:text-gray-400",
           className

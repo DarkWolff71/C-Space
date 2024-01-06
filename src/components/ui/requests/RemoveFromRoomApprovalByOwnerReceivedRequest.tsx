@@ -28,22 +28,22 @@ export function RemoveFromRoomApprovalByOwnerReceivedRequest({
     await axios.post("http://localhost:3000/api/approve-remove-request", {
       requestId,
     });
-    // window.location.reload();
     router.refresh();
     toast({
       description: "Approved remove request.",
     });
   }
+
   async function handleReject() {
     await axios.post("http://localhost:3000/api/cancel-remove-request", {
       requestId,
     });
-    // window.location.reload();
     router.refresh();
     toast({
       description: "Rejected remove request.",
     });
   }
+
   return (
     <>
       <FullWidthBg className="p-4 ">

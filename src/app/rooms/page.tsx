@@ -18,15 +18,6 @@ async function getRoomsData() {
 }
 
 export default async function RoomsPage() {
-  // TODO: Remove tempProps after testing
-  let tempProps = {
-    editors: 2,
-    owners: 5,
-    role: Role.EDITOR,
-    name: "Dark Wold",
-    requests: 45,
-    unpublishedVideos: 56,
-  };
   let roomsData: GetRoomsResponse = await getRoomsData();
   const session = await getServerSession(authOptions);
   const roleInCurrentRoom =
@@ -74,24 +65,6 @@ export default async function RoomsPage() {
                 ></RoomCard>
               );
             })}
-
-          {/* TODO: Remove this after testing 
-          <RoomCard {...tempProps} className="w-full"></RoomCard>
-          <RoomCard {...tempProps} className="w-full"></RoomCard>
-          <RoomCard {...tempProps} className="w-full"></RoomCard>
-          <RoomCard {...tempProps} className="w-full"></RoomCard>
-          <RoomCard {...tempProps} className="w-full"></RoomCard>
-          <RoomCard {...tempProps} className="w-full"></RoomCard>
-          <RoomCard {...tempProps} className="w-full"></RoomCard>
-          <RoomCard {...tempProps} className="w-full"></RoomCard>
-          <RoomCard {...tempProps} className="w-full"></RoomCard>
-          <RoomCard {...tempProps} className="w-full"></RoomCard>
-          <RoomCard {...tempProps} className="w-full"></RoomCard>
-          <RoomCard {...tempProps} className="w-full"></RoomCard>
-          <RoomCard {...tempProps} className="w-full"></RoomCard>
-          <RoomCard {...tempProps} className="w-full"></RoomCard>
-          <RoomCard {...tempProps} className="w-full"></RoomCard>
-          <RoomCard {...tempProps} className="w-full"></RoomCard> */}
         </div>
       </PageContent>
     </>

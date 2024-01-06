@@ -35,6 +35,16 @@ export const videoFile = atom<File | null>({
   default: null,
 });
 
+export const videoFileSize = atom<number | null>({
+  key: "videoFileSize",
+  default: null,
+});
+
+export const videoFileType = atom<string | null>({
+  key: "videoFileType",
+  default: null,
+});
+
 export const isVideoFileChanged = atom<boolean>({
   key: "isVideoFileChanged",
   default: false,
@@ -58,4 +68,14 @@ export const isThumbnailFileChanged = atom<boolean>({
 export const videoUploadPercentage = atom<number>({
   key: "videoUploadPercentage",
   default: 0,
+});
+
+export const isThumbnailAlreadyPresent = atom<boolean>({
+  key: "isThumbnailAlreadyPresent",
+  default: false,
+});
+
+export const isVideoAlreadyPresent = atom<boolean>({
+  key: "isVideoAlreadyPresent",
+  default: false,
 });

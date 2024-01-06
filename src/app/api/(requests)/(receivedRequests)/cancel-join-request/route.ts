@@ -11,14 +11,8 @@ export async function POST(req: NextRequest) {
     await req.json()
   );
   const session = await getServerSession(authOptions);
-  if (
-    !(
-      validatedRequest.success === true &&
-      session &&
-      session.user.email &&
-      session.user.roomName
-    )
-  ) {
+
+  if (!(validatedRequest.success === true && session && session.user.email)) {
     return NextResponse.json({ error: "Invalid request" }, { status: 400 });
   }
 
@@ -48,5 +42,6 @@ export async function POST(req: NextRequest) {
       id: validatedRequest.data.requestId,
     },
   });
+
   return NextResponse.json({});
 }

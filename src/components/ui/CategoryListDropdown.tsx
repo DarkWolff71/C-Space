@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import {
   Dropdown,
   DropdownTrigger,
@@ -9,7 +9,7 @@ import {
   Button,
   Selection,
 } from "@nextui-org/react";
-import { useSetRecoilState } from "recoil";
+import { useRecoilState } from "recoil";
 import { categoryIdState } from "@/recoil-store/atoms/upload-video";
 import { getCategoryList } from "@/lib/constants/videoCategories";
 
@@ -20,10 +20,36 @@ export function CategoryListDropdown() {
   const [selectedKeys, setSelectedKeys] = React.useState<Set<string>>(
     new Set([])
   );
-  const selectedValue = React.useMemo(
-    () => Array.from(selectedKeys).join(", "),
-    [selectedKeys]
-  );
+  let [categoryIdStateVar, setCategoryIdState] =
+    useRecoilState(categoryIdState);
+  let [displayCategory, setDisplayCategory] = useState<string | null>(null);
+  let selectedValueWhenCategoryIdStateChanges = React.useMemo(() => {
+    console.log("line 288888888");
+    console.log(categoryIdStateVar);
+    console.log(
+      categoryList.find((category) => category.id === categoryIdStateVar)
+    );
+    const category = categoryList.find(
+      (category) => category.id === categoryIdStateVar
+    )?.title;
+
+    console.log("line 37: ", category);
+
+    if (category) {
+      setDisplayCategory(category);
+    }
+    return category;
+  }, [categoryIdStateVar]);
+
+  let selectedValue = React.useMemo(() => {
+    const category = Array.from(selectedKeys).join(", ");
+    if (category) {
+      setDisplayCategory(category);
+    }
+    console.log("line 43: ", category);
+
+    return category;
+  }, [selectedKeys]);
 
   const handleSelectionChange = (keys: Selection) => {
     if (typeof keys === "string") {
@@ -33,13 +59,11 @@ export function CategoryListDropdown() {
     }
   };
 
-  let setCategoryId = useSetRecoilState(categoryIdState);
-
   return (
     <Dropdown>
       <DropdownTrigger>
         <Button variant="bordered" className="capitalize">
-          {selectedValue ? selectedValue : "--Choose a category--"}
+          {displayCategory ? displayCategory : "--Choose a category--"}
         </Button>
       </DropdownTrigger>
       <DropdownMenu
@@ -60,7 +84,7 @@ export function CategoryListDropdown() {
               key={category.title}
               value={category.id}
               onPress={(e) => {
-                setCategoryId(category.id);
+                setCategoryIdState(category.id);
               }}
             >
               {category.title}

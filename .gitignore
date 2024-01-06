@@ -34,3 +34,12 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# prisma env file
+./prisma/.env
+
+notes.txt
+design.txt
+
+# Contentlayer
+.contentlayer

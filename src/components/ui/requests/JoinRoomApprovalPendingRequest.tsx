@@ -13,6 +13,7 @@ import { cn } from "@/lib/utils";
 import { Separator } from "../shadcn/separator";
 import { ScrollArea } from "../shadcn/scroll-area";
 import { useToast } from "../shadcn/use-toast";
+import { useRouter } from "next/navigation";
 
 type Props = {
   requestId: string;
@@ -39,14 +40,16 @@ export function JoinRoomApprovalPendingRequest({
   const { data: session } = useSession();
   let [isOpen, setIsOpen] = useState(false);
   const { toast } = useToast();
+  const router = useRouter();
 
-  async function handleReject() {
+  async function handleCancel() {
     await axios.post("http://localhost:3000/api/cancel-join-request", {
       requestId,
     });
-    window.location.reload();
+    // window.location.reload();
+    router.refresh();
     toast({
-      description: "Request rejected successfully.",
+      description: "Join request cancelled successfully.",
     });
   }
 
@@ -140,8 +143,8 @@ export function JoinRoomApprovalPendingRequest({
             </div>
             <div className="flex  gap-3">
               <div className=" flex justify-center items-center">
-                <Button onClick={handleReject} color="primary">
-                  Reject
+                <Button onClick={handleCancel} color="primary">
+                  Cancel
                 </Button>
               </div>
               <div className="flex-shrink-0 w-auto  ml-auto">

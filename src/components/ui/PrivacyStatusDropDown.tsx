@@ -9,16 +9,20 @@ import {
   Button,
   Selection,
 } from "@nextui-org/react";
-import { useSetRecoilState } from "recoil";
+import { useRecoilState } from "recoil";
 import { privacyStatusState } from "@/recoil-store/atoms/upload-video";
 
-export function PrivacyStatusDropDown() {
-  const PRIVACY_STATUS_LIST = [
-    { title: "Private", value: "private" },
-    { title: "Public", value: "public" },
-    { title: "Unlisted", value: "unlisted" },
-  ];
+const PRIVACY_STATUS_LIST = [
+  { title: "Private", value: "private" },
+  { title: "Public", value: "public" },
+  { title: "Unlisted", value: "unlisted" },
+];
 
+function getPrivacyStatusTitle(value: string) {
+  return PRIVACY_STATUS_LIST.find((status) => status.value === value)?.title;
+}
+
+export function PrivacyStatusDropDown() {
   const [selectedKeys, setSelectedKeys] = React.useState<Set<string>>(
     new Set(["private"])
   );
@@ -35,16 +39,18 @@ export function PrivacyStatusDropDown() {
     }
   };
 
-  let setPrivacyStatus = useSetRecoilState(privacyStatusState);
-
+  let [privacyStatusStateVar, setPrivacyStatusStateVar] =
+    useRecoilState(privacyStatusState);
+  console.log("line 44");
   return (
     <Dropdown>
       <DropdownTrigger>
         <Button variant="bordered" className="capitalize">
-          {selectedValue}
+          {getPrivacyStatusTitle(privacyStatusStateVar)}
         </Button>
       </DropdownTrigger>
       <DropdownMenu
+        aria-label="Privacy status options"
         variant="flat"
         disallowEmptySelection
         selectionMode="single"
@@ -58,7 +64,8 @@ export function PrivacyStatusDropDown() {
               key={privacyStatus.title}
               value={privacyStatus.value}
               onPress={(e) => {
-                setPrivacyStatus(privacyStatus.value);
+                //@ts-ignore
+                setPrivacyStatusStateVar(privacyStatus.value);
               }}
             >
               {privacyStatus.title}

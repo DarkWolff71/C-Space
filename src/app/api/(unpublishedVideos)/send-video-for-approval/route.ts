@@ -1,7 +1,7 @@
 import { getPrismaClient } from "@/lib/helpers/prisma";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
-import { authOptions } from "../../(authentication)/options";
+import { authOptions } from "../../(authentication)/auth/[...nextauth]/options";
 import { sendVideoForApprovalRequestValidator } from "@/validators/unpublishedVideosValidator";
 
 const prisma = getPrismaClient();
@@ -22,6 +22,7 @@ export async function POST(req: NextRequest) {
   ) {
     return NextResponse.json({ error: "Invalid request" }, { status: 400 });
   }
+
   const verifyWithDb = await prisma.room.findUnique({
     where: {
       name: session.user.roomName,
@@ -48,6 +49,7 @@ export async function POST(req: NextRequest) {
       },
     },
   });
+
   if (
     !(
       (verifyWithDb?._count.editors ?? 0) +
@@ -66,5 +68,6 @@ export async function POST(req: NextRequest) {
       sentForApproval: true,
     },
   });
+
   return NextResponse.json({ message: "Success" });
 }

@@ -24,16 +24,9 @@ export function CategoryListDropdown() {
     useRecoilState(categoryIdState);
   let [displayCategory, setDisplayCategory] = useState<string | null>(null);
   let selectedValueWhenCategoryIdStateChanges = React.useMemo(() => {
-    console.log("line 288888888");
-    console.log(categoryIdStateVar);
-    console.log(
-      categoryList.find((category) => category.id === categoryIdStateVar)
-    );
     const category = categoryList.find(
       (category) => category.id === categoryIdStateVar
     )?.title;
-
-    console.log("line 37: ", category);
 
     if (category) {
       setDisplayCategory(category);
@@ -46,7 +39,6 @@ export function CategoryListDropdown() {
     if (category) {
       setDisplayCategory(category);
     }
-    console.log("line 43: ", category);
 
     return category;
   }, [selectedKeys]);

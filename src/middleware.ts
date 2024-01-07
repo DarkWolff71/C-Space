@@ -29,6 +29,6 @@ export default withAuth(async function middleware(req: NextRequest) {
       return NextResponse.redirect(new URL("/rooms", req.url));
     }
   }
-  console.log("line 22 middleware");
+
   return NextResponse.next();
 });

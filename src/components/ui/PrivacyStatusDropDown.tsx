@@ -41,7 +41,6 @@ export function PrivacyStatusDropDown() {
 
   let [privacyStatusStateVar, setPrivacyStatusStateVar] =
     useRecoilState(privacyStatusState);
-  console.log("line 44");
   return (
     <Dropdown>
       <DropdownTrigger>

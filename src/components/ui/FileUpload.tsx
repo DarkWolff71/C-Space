@@ -85,7 +85,6 @@ export function FileUpload({
       setFileState(file);
       setIsVideoFileChangedState(true);
     }
-    console.log(file);
   };
 
   const handleRemoveFile = () => {
@@ -97,7 +96,7 @@ export function FileUpload({
     }
     setVideoUploadedPercentage(0);
   };
-  console.log("in file upload");
+
   return (
     <>
       {!!fileState ? (

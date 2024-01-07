@@ -45,15 +45,7 @@ export function CreateRoomCard({ className }: Props) {
     if (!parsedResult.success) {
       setIsInvalidInput(true);
       setCreateRoomButtonDisabled(true);
-
       setInputErrorMessage(parsedResult.error.issues[0].message);
-      console.log(parsedResult);
-      console.log("===");
-      console.log(parsedResult.error.issues[0].message);
-
-      console.log("===");
-
-      console.log(parsedResult.error.message);
     } else {
       setIsInvalidInput(false);
       setCreateRoomButtonDisabled(false);

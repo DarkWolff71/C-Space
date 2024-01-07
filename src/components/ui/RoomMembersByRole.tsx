@@ -36,7 +36,6 @@ type Props = {
 export function RoomMembersByRole({ members, role, ownersCount }: Props) {
   const router = useRouter();
   let [filteredMembersList, setFilteredMembersList] = useState(members);
-  let [searchInputValue, setSearchInputValue] = useState<string>("");
   let [memberEmail, setMemberEmail] = useState("");
   const { toast } = useToast();
   let [isAlertOpen, setIsAlertOpen] = useState<boolean>(false);
@@ -53,7 +52,6 @@ export function RoomMembersByRole({ members, role, ownersCount }: Props) {
   }
   let inputChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     let inputValue = e.target.value;
-    setSearchInputValue(inputValue);
     if (inputValue) {
       setFilteredMembersList(
         members.filter((member) => member.name.startsWith(inputValue.trim()))
@@ -103,7 +101,6 @@ export function RoomMembersByRole({ members, role, ownersCount }: Props) {
       }
     );
     router.refresh();
-    //window.location.reload();
     if (response.data.message == "success") {
       toast({
         description: "Succesfully removed.",

@@ -20,10 +20,6 @@ import { Listbox, ListboxItem } from "@nextui-org/react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useRecoilState, useSetRecoilState } from "recoil";
-// import {
-//   ownersInCurrentRoom,
-//   roleInCurrentRoom,
-// } from "@/recoil-store/atoms/members";
 import { useToast } from "./shadcn/use-toast";
 import {
   categoryIdState,
@@ -90,23 +86,16 @@ export function RoomCard({
   let [isProcessingrequest, setIsProcessingrequest] = useState(false);
   let router = useRouter();
   const { data: session, update: updateSession } = useSession();
-  // let setOwnersInCurrentRoom = useSetRecoilState(ownersInCurrentRoom);
-  // let setRoleInCurrentRoom = useSetRecoilState(roleInCurrentRoom);
   const { toast } = useToast();
 
   let handleCardClick = async (
     e: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) => {
     e.stopPropagation();
-    console.log("name: ", name);
-    console.log("role: ", role === Role.EDITOR ? "editor" : "owner");
-
     await updateSession({
       roomName: name,
       role: role === Role.EDITOR ? "editor" : "owner",
     });
-    // setOwnersInCurrentRoom(owners);
-    // setRoleInCurrentRoom(Role.EDITOR);
 
     //resetting the upload video page
     setCategoryIdState("");
@@ -128,7 +117,6 @@ export function RoomCard({
     // ================================================================
 
     router.refresh();
-    // router.push("/upload-video");
     toast({ description: `You are now in ${name} room.` });
   };
 
@@ -205,11 +193,17 @@ export function RoomCard({
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel onClick={handleAlertCancel}>
+            <AlertDialogCancel
+              onClick={handleAlertCancel}
+              className={cn({ "hidden ": isProcessingrequest })}
+            >
               Cancel
             </AlertDialogCancel>
-            <AlertDialogAction onClick={handleAlertContinue}>
-              Continue
+            <AlertDialogAction
+              onClick={handleAlertContinue}
+              disabled={isProcessingrequest}
+            >
+              {"Continue"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

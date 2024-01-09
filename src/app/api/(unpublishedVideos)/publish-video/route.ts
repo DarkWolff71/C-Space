@@ -109,7 +109,6 @@ export async function POST(req: NextRequest) {
       }),
     },
   };
-  let videoId = "";
   let s3Object = await s3.getObject({
     Key: video.videoS3Key,
     Bucket: process.env.AWS_BUCKET_NAME,
@@ -122,14 +121,7 @@ export async function POST(req: NextRequest) {
       body: fileStream,
     },
   });
-
-  //if you want to delete the video from s3 after publishing it to youtube
-  s3.deleteObject({
-    Bucket: process.env.AWS_BUCKET_NAME,
-    Key: video.videoS3Key,
-  });
-  videoId = response.data.id ?? "";
-
+  let videoId = response.data.id ?? "";
   if (video?.thumbnailS3Key) {
     let s3Object = await s3.getObject({
       Key: video.thumbnailS3Key,
@@ -151,6 +143,12 @@ export async function POST(req: NextRequest) {
       Key: video.thumbnailS3Key,
     });
   }
+
+  //if you want to delete the video from s3 after publishing it to youtube
+  s3.deleteObject({
+    Bucket: process.env.AWS_BUCKET_NAME,
+    Key: video.videoS3Key,
+  });
 
   //if you want to delete the video from db after publishing it to youtube
   await prisma.video.delete({

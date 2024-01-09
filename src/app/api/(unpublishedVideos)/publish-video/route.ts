@@ -67,14 +67,11 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid request" }, { status: 400 });
   }
 
-  await prisma.video.update({
+  const video = await prisma.video.update({
     where: { id: validatedRequest.data.videoId },
     data: {
       isEditable: false,
     },
-  });
-  const video = await prisma.video.findUnique({
-    where: { id: validatedRequest.data.videoId },
     select: {
       videoS3Key: true,
       thumbnailS3Key: true,
@@ -85,6 +82,14 @@ export async function POST(req: NextRequest) {
       privacyStatus: true,
     },
   });
+
+  if (!video.videoS3Key) {
+    return NextResponse.json(
+      { error: "Invalid request. No video." },
+      { status: 400 }
+    );
+  }
+
   oAuth2Client.setCredentials({
     access_token: validatedRequest.data.ytToken.accessToken,
     refresh_token: validatedRequest.data.ytToken.refreshToken,
@@ -93,42 +98,37 @@ export async function POST(req: NextRequest) {
   const youtube = google.youtube({ version: "v3", auth: oAuth2Client });
   const videoMetadata: youtube_v3.Schema$Video = {
     snippet: {
-      title: video?.title,
-      description: video?.description,
-      tags: video?.tags,
-      categoryId: video?.categoryId,
+      ...(video.title && { title: video.title }),
+      ...(video.description && { description: video.description }),
+      ...(video.tags.length > 0 && { tags: video.tags }),
+      ...(video.categoryId && { categoryId: video.categoryId }),
     },
     status: {
-      privacyStatus: getVideoPrivacuStatusString(video?.privacyStatus),
+      ...(video.privacyStatus && {
+        privacyStatus: getVideoPrivacuStatusString(video.privacyStatus),
+      }),
     },
   };
   let videoId = "";
-  if (video?.videoS3Key) {
-    let s3Object = await s3.getObject({
-      Key: video.videoS3Key,
-      Bucket: process.env.AWS_BUCKET_NAME,
-    });
-    let fileStream = s3Object.Body;
-    const response = await youtube.videos.insert({
-      part: ["snippet", "status"],
-      requestBody: videoMetadata,
-      media: {
-        body: fileStream,
-      },
-    });
-    //if you want to delete the video from s3 after publishing it to youtube
-    s3.deleteObject({
-      Bucket: process.env.AWS_BUCKET_NAME,
-      Key: video.videoS3Key,
-    });
-    videoId = response.data.id ?? "";
-  } else {
-    const response = await youtube.videos.insert({
-      part: ["snippet", "status"],
-      requestBody: videoMetadata,
-    });
-    videoId = response.data.id ?? "";
-  }
+  let s3Object = await s3.getObject({
+    Key: video.videoS3Key,
+    Bucket: process.env.AWS_BUCKET_NAME,
+  });
+  let fileStream = s3Object.Body;
+  const response = await youtube.videos.insert({
+    part: ["snippet", "status"],
+    requestBody: videoMetadata,
+    media: {
+      body: fileStream,
+    },
+  });
+
+  //if you want to delete the video from s3 after publishing it to youtube
+  s3.deleteObject({
+    Bucket: process.env.AWS_BUCKET_NAME,
+    Key: video.videoS3Key,
+  });
+  videoId = response.data.id ?? "";
 
   if (video?.thumbnailS3Key) {
     let s3Object = await s3.getObject({
@@ -159,5 +159,5 @@ export async function POST(req: NextRequest) {
     },
   });
 
-  return NextResponse.json({ message: "Successfull uploaded to Youtube." });
+  return NextResponse.json({ message: "Successfully uploaded to Youtube." });
 }

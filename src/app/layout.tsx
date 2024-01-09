@@ -21,10 +21,7 @@ export default function RootLayout({
     <html lang="en" className="dark:dark">
       {/* <html lang="en" className="dark"> */}
       <body className={inter.className}>
-        <Providers>
-          <Sidebar></Sidebar>
-          {children}
-        </Providers>
+        <Providers>{children}</Providers>
         <Toaster />
       </body>
     </html>

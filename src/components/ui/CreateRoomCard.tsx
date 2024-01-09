@@ -16,6 +16,7 @@ import axios from "axios";
 import { roomNameValidator } from "@/validators/roomsValidators";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { useToast } from "./shadcn/use-toast";
 
 type Props = {
   className?: string;
@@ -33,6 +34,7 @@ export function CreateRoomCard({ className }: Props) {
   let [inputValue, setInputValue] = useState<string>("");
   let [isCreatingRoom, setIsCreatingRoom] = useState(false);
   const { update } = useSession();
+  const { toast } = useToast();
 
   let handleInputValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
@@ -63,6 +65,7 @@ export function CreateRoomCard({ className }: Props) {
         setIsCreatingRoom(false);
         return;
       }
+      toast({ description: `Created ${inputValue} room!!` });
     } catch (error) {
       // TODO: find if a better way exists for handling the error here
       console.log("Error creating a room");

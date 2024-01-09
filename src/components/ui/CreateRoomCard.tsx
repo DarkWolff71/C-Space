@@ -68,7 +68,6 @@ export function CreateRoomCard({ className }: Props) {
       toast({ description: `Created ${inputValue} room!!` });
     } catch (error) {
       // TODO: find if a better way exists for handling the error here
-      console.log("Error creating a room");
       console.log(error);
     }
     await update({ roomName: inputValue, role: "owner" });

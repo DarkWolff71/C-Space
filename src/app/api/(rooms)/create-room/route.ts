@@ -18,8 +18,6 @@ export async function POST(req: NextRequest, res: NextResponse) {
   });
 
   if (dbResult) {
-    console.log("hello im here 21");
-
     return NextResponse.json({
       alreadyExists: "The room with the given name already exists",
     });
@@ -38,13 +36,11 @@ export async function POST(req: NextRequest, res: NextResponse) {
       },
     });
   } else {
-    console.log("hello im here 39");
     return NextResponse.json(
       { errorMessage: "Session does not contain email address" },
       { status: 500 }
     );
   }
-  console.log("hello im here 47");
 
   return NextResponse.json({});
 }

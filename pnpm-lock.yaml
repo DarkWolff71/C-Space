@@ -143,10 +143,10 @@ devDependencies:
     specifier: ^20.10.6
     version: 20.10.6
   '@types/react':
-    specifier: ^18.2.46
+    specifier: ^18.2.0
     version: 18.2.46
   '@types/react-dom':
-    specifier: ^18.2.18
+    specifier: ^18.2.0
     version: 18.2.18
   autoprefixer:
     specifier: ^10.4.16

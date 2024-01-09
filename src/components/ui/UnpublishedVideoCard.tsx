@@ -105,6 +105,8 @@ export function UnpublishedVideoCard({
 }: Props) {
   let [isOpen, setIsOpen] = useState<boolean>(false);
   let [isPublishingState, setIsPusblishingState] = useState(false);
+  let [isPublishedState, setIsPublishedState] = useState(false);
+
   let setvideoTagsState = useSetRecoilState(videoTags);
   let setvideoIdState = useSetRecoilState(videoId);
   let setvideoFileState = useSetRecoilState(videoFile);
@@ -204,6 +206,7 @@ export function UnpublishedVideoCard({
         videoId: id,
         ytToken: JSON.parse(decodeURIComponent(ytTokenCookie)),
       });
+      setIsPublishedState(true);
       toast({
         description: "Successfully published to Youtube!!",
       });
@@ -399,7 +402,7 @@ export function UnpublishedVideoCard({
                   isDisabled={isPublishingState}
                   className={cn(
                     "bg-gradient-to-tr from-pink-500 to-yellow-500 text-white shadow-lg",
-                    { "hidden ": !isEditable }
+                    { "hidden ": !isEditable || isPublishedState }
                   )}
                 >
                   Edit
@@ -415,7 +418,8 @@ export function UnpublishedVideoCard({
                     "bg-gradient-to-tr from-pink-500 to-yellow-500 text-white shadow-lg",
                     {
                       "hidden ": !(
-                        ownersInCurrentRoom! > 1 && !sentForApproval
+                        (ownersInCurrentRoom! > 1 && !sentForApproval) ||
+                        !videoFileSize
                       ),
                     }
                   )}
@@ -450,6 +454,7 @@ export function UnpublishedVideoCard({
                     {
                       "hidden ":
                         ownersInCurrentRoom === 1 ||
+                        !videoFileSize ||
                         isApproved ||
                         !sentForApproval,
                     }
@@ -477,12 +482,19 @@ export function UnpublishedVideoCard({
                     "bg-gradient-to-tr from-pink-500 to-yellow-500 text-white shadow-lg",
                     {
                       "hidden ":
-                        roleInCurrentRoom === Role.EDITOR || !isApproved,
+                        isPublishedState ||
+                        !videoFileSize ||
+                        roleInCurrentRoom === Role.EDITOR ||
+                        !isApproved,
                     }
                   )}
                   onClick={handlePublish}
                 >
-                  {isEditable && !isPublishingState ? "Publish" : "Publishing"}
+                  {isPublishedState
+                    ? "Published"
+                    : isEditable && !isPublishingState
+                    ? "Publish"
+                    : "Publishing"}
                 </Button>
               </div>
             </div>

@@ -20,7 +20,9 @@ const RECEIVED_REQUESTS_URLS = [
 export default withAuth(async function middleware(req: NextRequest) {
   const token = await getToken({ req });
   const path = req.nextUrl.pathname;
-
+  if (path === "/") {
+    return NextResponse.redirect(new URL("/rooms", req.url));
+  }
   if (RECEIVED_REQUESTS_URLS.includes(path)) {
     return NextResponse.next();
   }
@@ -32,3 +34,13 @@ export default withAuth(async function middleware(req: NextRequest) {
 
   return NextResponse.next();
 });
+
+export const config = {
+  matcher: [
+    /*
+     * Match all request paths except for the ones matching exactly with:
+     * - /signIn
+     */
+    "/((?!signIn).*)",
+  ],
+};

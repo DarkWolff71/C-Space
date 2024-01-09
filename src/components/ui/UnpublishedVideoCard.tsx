@@ -417,10 +417,9 @@ export function UnpublishedVideoCard({
                   className={cn(
                     "bg-gradient-to-tr from-pink-500 to-yellow-500 text-white shadow-lg",
                     {
-                      "hidden ": !(
-                        (ownersInCurrentRoom! > 1 && !sentForApproval) ||
-                        !videoFileSize
-                      ),
+                      "hidden ":
+                        !(ownersInCurrentRoom! > 1 && !sentForApproval) ||
+                        !videoSize,
                     }
                   )}
                   onClick={handleSendForApproval}
@@ -454,7 +453,7 @@ export function UnpublishedVideoCard({
                     {
                       "hidden ":
                         ownersInCurrentRoom === 1 ||
-                        !videoFileSize ||
+                        !videoSize ||
                         isApproved ||
                         !sentForApproval,
                     }
@@ -483,7 +482,7 @@ export function UnpublishedVideoCard({
                     {
                       "hidden ":
                         isPublishedState ||
-                        !videoFileSize ||
+                        !videoSize ||
                         roleInCurrentRoom === Role.EDITOR ||
                         !isApproved,
                     }

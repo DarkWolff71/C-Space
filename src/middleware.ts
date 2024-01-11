@@ -41,6 +41,6 @@ export const config = {
      * Match all request paths except for the ones matching exactly with:
      * - /signIn
      */
-    "/((?!signIn).*)",
+    "/((?!signIn|docs).*)",
   ],
 };

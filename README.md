@@ -1,36 +1,58 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# C-Space Platform
+
+C-Space is a revolutionary platform designed to address the unique challenges faced by YouTubers who are constantly on the move, exploring remote locations with limited internet access. The platform provides a secure and efficient solution for YouTubers and their editors to collaborate on video content without compromising account security.
+
+## Problem Statement
+
+Many YouTubers face difficulties in downloading large edited video files, especially when they are in locations with limited internet access or expensive data packs. While adding editors to their YouTube Studio account seems like a solution, it raises security concerns as it grants complete access to editors, potentially compromising the YouTuber's account.
+
+## Solution
+
+C-Space offers a secure alternative where YouTubers and editors can collaborate without compromising account security. The platform allows editors to upload videos, which remain on C-Space servers until approved by the owners. Once approved, the videos are directly published to the YouTuber's YouTube account without the need to download large files.
+
+## Key Features
+
+- **Rooms**: Analogous to YouTube channels, users can be part of multiple rooms, serving as either an editor or an owner.
+  
+- **Owners**: Owners have the authority to add, edit, and publish videos to YouTube. In multi-owner rooms, consensus is required for certain actions, ensuring secure and collective decision-making.
+
+- **Editors**: Editors can upload and edit videos, facilitating collaboration within rooms.
+
+- **Consensus Mechanism**: In rooms with multiple owners, consensus is required for actions like publishing videos or removing a member, ensuring secure and collective decision-making.
+
+## Tech Stack
+
+- **Framework**: Next.js
+- **Language**: TypeScript
+- **Input Validation**: Zod
+- **Database**: PostgreSQL
+- **ORM**: Prisma
+- **Authentication**: OAuth and NextAuth
+- **State Management**: Recoil
+- **UI Libraries**: NextUI, Shadcn UI, Radix UI, MUI, Flowbite
+- **AWS**: S3, RDS
 
 ## Getting Started
 
-First, run the development server:
+To experience the platform, visit [C-Space](#) and sign up as either an owner or an editor. Explore the rooms, upload and edit videos, and witness the seamless collaboration between YouTubers and editors.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Installation
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+1. Clone the repository: `git clone https://github.com/your-username/c-space.git`
+2. Install dependencies: `npm install`
+3. Set up the database and configure environmental variables.
+4. Run the application: `npm run dev`
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Contributing
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+We welcome contributions from the community. If you find any issues or have suggestions for improvement, please open an issue or submit a pull request.
 
-## Learn More
+## License
 
-To learn more about Next.js, take a look at the following resources:
+This project is licensed under the [MIT License](LICENSE).
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Acknowledgments
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+- The development team acknowledges the contributions of the open-source community and the support of the technologies and libraries used in building C-Space.
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Feel free to explore the platform and contribute to its growth. Happy collaborating!

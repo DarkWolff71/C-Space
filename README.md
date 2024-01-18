@@ -29,7 +29,7 @@ C-Space offers a secure alternative where YouTubers and editors can collaborate 
 - **ORM**: Prisma
 - **Authentication**: OAuth and NextAuth
 - **State Management**: Recoil
-- **UI Libraries**: NextUI, Shadcn UI, Radix UI, MUI, Flowbite
+- **UI Libraries**: NextUI, Shadcn UI, Radix UI, MUI, Flowbite and Tailwind CSS
 - **AWS**: S3, RDS
 
 ## Getting Started

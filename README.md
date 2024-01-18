@@ -10,7 +10,7 @@ Many YouTubers face difficulties in downloading large edited video files, especi
 
 C-Space offers a secure alternative where YouTubers and editors can collaborate without compromising account security. The platform allows editors to upload videos, which remain on C-Space servers until approved by the owners. Once approved, the videos are directly published to the YouTuber's YouTube account without the need to download large files.
 
-## Key Features
+## Terminology
 
 - **Rooms**: Analogous to YouTube channels, users can be part of multiple rooms, serving as either an editor or an owner.
   
@@ -50,9 +50,3 @@ We welcome contributions from the community. If you find any issues or have sugg
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
-
-## Acknowledgments
-
-- The development team acknowledges the contributions of the open-source community and the support of the technologies and libraries used in building C-Space.
-
-Feel free to explore the platform and contribute to its growth. Happy collaborating!

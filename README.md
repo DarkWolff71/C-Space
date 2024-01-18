@@ -1,6 +1,6 @@
-# C-Space Platform
+# C-Space 
 
-C-Space is a revolutionary platform designed to address the unique challenges faced by YouTubers who are constantly on the move, exploring remote locations with limited internet access. The platform provides a secure and efficient solution for YouTubers and their editors to collaborate on video content without compromising account security.
+C-Space is a platform designed to address the unique challenges faced by YouTubers who are constantly on the move, exploring remote locations with limited internet access. The platform provides a secure and efficient solution for YouTubers and their editors to collaborate on video content without compromising account security.
 
 ## Problem Statement
 

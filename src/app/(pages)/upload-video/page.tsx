@@ -29,6 +29,7 @@ import {
 import { toast } from "@/components/ui/shadcn/use-toast";
 import { CreateUploadVideoRequestBodyType } from "@/validators/uploadVideoValidators";
 import { useRouter } from "next/navigation";
+import { BASE_URL } from "@/lib/config/URL";
 
 const supportedVideoFormats = [
   ".mov",
@@ -198,7 +199,7 @@ export default function Videos() {
       setVideoUploadedPercentage(100);
       clearInterval(setIntervalId);
 
-      await axios.post("http://localhost:3000/api/complete-upload-video", {
+      await axios.post(`${BASE_URL}/api/complete-upload-video`, {
         fileKey: createUploadVideoResponse.data.key,
         uploadId: createUploadVideoResponse.data.uploadId,
         parts: partInfoList,

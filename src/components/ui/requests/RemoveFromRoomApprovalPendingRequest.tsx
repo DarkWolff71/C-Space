@@ -11,6 +11,7 @@ import { useSession } from "next-auth/react";
 import { FullWidthBg } from "..";
 import { useToast } from "../shadcn/use-toast";
 import { useRouter } from "next/navigation";
+import { BASE_URL } from "@/lib/config/URL";
 
 type Props = {
   toUser: {
@@ -34,7 +35,7 @@ export function RemoveFromRoomApprovalPendingRequest({
   const router = useRouter();
 
   async function handleCancel() {
-    await axios.post("http://localhost:3000/api/cancel-remove-request", {
+    await axios.post(`${BASE_URL}/api/cancel-remove-request`, {
       requestId,
     });
     router.refresh();

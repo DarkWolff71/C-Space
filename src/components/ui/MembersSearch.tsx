@@ -21,6 +21,7 @@ import { GetMembersResponse } from "@/types/response";
 import { useSession } from "next-auth/react";
 import { FullWidthBg } from ".";
 import { toast } from "./shadcn/use-toast";
+import { BASE_URL } from "@/lib/config/URL";
 
 export function MembersSearch() {
   let { data: session } = useSession();
@@ -58,7 +59,7 @@ export function MembersSearch() {
 
   let handleSendRequest = async () => {
     setSendRequestIsLoading(true);
-    await axios.post("http://localhost:3000/api/join-room-request/send", {
+    await axios.post(`${BASE_URL}/api/join-room-request/send`, {
       displayOwners,
       displayEditors,
       toUserEmail: userEmail,
@@ -126,7 +127,7 @@ export function MembersSearch() {
 
   async function getSearchResults() {
     try {
-      let response = await axios.get("http://localhost:3000/api/get-users", {
+      let response = await axios.get(`${BASE_URL}/api/get-users`, {
         params: {
           searchInput: searchInputValue.trim(),
         },

@@ -17,6 +17,7 @@ import { roomNameValidator } from "@/validators/roomsValidators";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useToast } from "./shadcn/use-toast";
+import { BASE_URL } from "@/lib/config/URL";
 
 type Props = {
   className?: string;
@@ -57,7 +58,7 @@ export function CreateRoomCard({ className }: Props) {
   let handleCreateRoom = async (onClose: () => void) => {
     setIsCreatingRoom(true);
     try {
-      let result = await axios.post("http://localhost:3000/api/create-room", {
+      let result = await axios.post(`${BASE_URL}/api/create-room`, {
         roomName: inputValue,
       });
       if (result.data.alreadyExists) {

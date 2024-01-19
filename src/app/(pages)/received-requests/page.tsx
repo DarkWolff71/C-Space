@@ -5,6 +5,7 @@ import {
 } from "@/components/ui";
 import { RemoveFromRoomApprovalByOwnerReceivedRequest } from "@/components/ui/requests/RemoveFromRoomApprovalByOwnerReceivedRequest";
 import { Separator } from "@/components/ui/shadcn/separator";
+import { BASE_URL } from "@/lib/config/URL";
 import { getCookiesString } from "@/lib/helpers/cookiesString";
 import { GetReceivedRequestsResponse } from "@/types/response";
 import React from "react";
@@ -25,7 +26,7 @@ export default async function ReceivedRequests() {
     joinRoomApproveRequests,
     removeFromRoomApproveRequests,
   }: GetReceivedRequestsResponse = await fetchData(
-    "http://localhost:3000/api/get-received-requests"
+    `${BASE_URL}/api/get-received-requests`
   );
 
   return (

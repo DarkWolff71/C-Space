@@ -1,4 +1,5 @@
 import { JoinRoomSentRequest, PageContent } from "@/components/ui";
+import { BASE_URL } from "@/lib/config/URL";
 import { getCookiesString } from "@/lib/helpers/cookiesString";
 import { GetSentRequestsResponse } from "@/types/response";
 import React from "react";
@@ -15,7 +16,7 @@ async function fetchData(url: string) {
 
 export default async function SentRequests() {
   let { requests: sentRequests }: GetSentRequestsResponse = await fetchData(
-    "http://localhost:3000/api/get-sent-requests"
+    `${BASE_URL}/api/get-sent-requests`
   );
 
   return (

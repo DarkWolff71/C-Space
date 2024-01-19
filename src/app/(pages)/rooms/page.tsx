@@ -5,9 +5,10 @@ import React from "react";
 import { getCookiesString } from "@/lib/helpers/cookiesString";
 import { authOptions } from "../../api/(authentication)/auth/[...nextauth]/options";
 import { getServerSession } from "next-auth";
+import { BASE_URL } from "@/lib/config/URL";
 
 async function getRoomsData() {
-  let response = await fetch("http://localhost:3000/api/get-rooms", {
+  let response = await fetch(`${BASE_URL}/api/get-rooms`, {
     headers: {
       Cookie: getCookiesString(),
     },

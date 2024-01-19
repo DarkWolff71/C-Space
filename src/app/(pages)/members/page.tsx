@@ -7,9 +7,10 @@ import { GetRoomMembersResponse } from "@/types/response";
 import { getServerSession } from "next-auth";
 import { getCookiesString } from "@/lib/helpers/cookiesString";
 import { authOptions } from "@/app/api/(authentication)/auth/[...nextauth]/options";
+import { BASE_URL } from "@/lib/config/URL";
 
 async function getRoomMembersData() {
-  let response = await axios.get("http://localhost:3000/api/get-room-members", {
+  let response = await axios.get(`${BASE_URL}/api/get-room-members`, {
     headers: {
       Cookie: getCookiesString(),
     },

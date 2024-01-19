@@ -21,6 +21,7 @@ import { useSession } from "next-auth/react";
 import axios from "axios";
 import { useToast } from "./shadcn/use-toast";
 import { useRouter } from "next/navigation";
+import { BASE_URL } from "@/lib/config/URL";
 
 enum Role {
   OWNER,
@@ -94,12 +95,9 @@ export function RoomMembersByRole({ members, role, ownersCount }: Props) {
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     e.stopPropagation();
-    const response = await axios.post(
-      "http://localhost:3000/api/remove-member",
-      {
-        userEmail: memberEmail,
-      }
-    );
+    const response = await axios.post(`${BASE_URL}/api/remove-member`, {
+      userEmail: memberEmail,
+    });
     router.refresh();
     if (response.data.message == "success") {
       toast({

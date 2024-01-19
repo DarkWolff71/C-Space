@@ -10,6 +10,7 @@ import DoneRoundedIcon from "@mui/icons-material/DoneRounded";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import { useToast } from "../shadcn/use-toast";
 import { useRouter } from "next/navigation";
+import { BASE_URL } from "@/lib/config/URL";
 
 type Props = {
   requestId: string;
@@ -31,7 +32,7 @@ export function JoinRoomSentRequest({
   const router = useRouter();
 
   async function handleCancel() {
-    await axios.post("http://localhost:3000/api/cancel-join-request", {
+    await axios.post(`${BASE_URL}/api/cancel-join-request`, {
       requestId,
     });
     router.refresh();

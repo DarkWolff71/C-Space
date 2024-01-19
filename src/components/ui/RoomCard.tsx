@@ -39,6 +39,7 @@ import {
   videoTitle,
   videoUploadPercentage,
 } from "@/recoil-store/atoms/upload-video";
+import { BASE_URL } from "@/lib/config/URL";
 type Props = {
   className?: string;
   name: string;
@@ -145,7 +146,7 @@ export function RoomCard({
     handleAlertContinue = async (e) => {
       e.stopPropagation();
       setIsProcessingrequest(true);
-      await axios.delete("http://localhost:3000/api/delete-room", {
+      await axios.delete(`${BASE_URL}/api/delete-room`, {
         params: { roomName: name },
       });
       if (session?.user.roomName === name) {
@@ -166,7 +167,7 @@ export function RoomCard({
     handleAlertContinue = async (e) => {
       e.stopPropagation();
       setIsProcessingrequest(true);
-      await axios.put("http://localhost:3000/api/leave-room", {
+      await axios.put(`${BASE_URL}/api/leave-room`, {
         roomName: name,
       });
       if (session?.user.roomName === name) {

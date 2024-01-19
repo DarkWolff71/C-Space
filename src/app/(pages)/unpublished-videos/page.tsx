@@ -6,6 +6,7 @@ import React from "react";
 import { authOptions } from "../../api/(authentication)/auth/[...nextauth]/options";
 import { Role } from "@/lib/constants/roles";
 import { VideoPrivacyStatus } from "@prisma/client";
+import { BASE_URL } from "@/lib/config/URL";
 
 function getPrivacyStatusString(privacyStatus: VideoPrivacyStatus) {
   switch (privacyStatus) {
@@ -30,9 +31,9 @@ async function fetchData(url: string) {
 
 export default async function page() {
   const videosData = fetchData(
-    "http://localhost:3000/api/get-unpublished-videos"
+    `${BASE_URL}/api/get-unpublished-videos`
   );
-  const ownersData = fetchData("http://localhost:3000/api/get-room-owners");
+  const ownersData = fetchData(`${BASE_URL}/api/get-room-owners`);
 
   const [{ videos }, ownersResponse]: [
     GetUnpublishedVideosResponse,

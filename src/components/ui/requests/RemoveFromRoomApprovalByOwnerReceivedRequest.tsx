@@ -7,6 +7,7 @@ import axios from "axios";
 import { useSession } from "next-auth/react";
 import { useToast } from "../shadcn/use-toast";
 import { useRouter } from "next/navigation";
+import { BASE_URL } from "@/lib/config/URL";
 
 type Props = {
   requestId: string;
@@ -25,7 +26,7 @@ export function RemoveFromRoomApprovalByOwnerReceivedRequest({
   const router = useRouter();
 
   async function handleAccept() {
-    await axios.post("http://localhost:3000/api/approve-remove-request", {
+    await axios.post(`${BASE_URL}/api/approve-remove-request`, {
       requestId,
     });
     router.refresh();
@@ -35,7 +36,7 @@ export function RemoveFromRoomApprovalByOwnerReceivedRequest({
   }
 
   async function handleReject() {
-    await axios.post("http://localhost:3000/api/cancel-remove-request", {
+    await axios.post(`${BASE_URL}/api/cancel-remove-request`, {
       requestId,
     });
     router.refresh();

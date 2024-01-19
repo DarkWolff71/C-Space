@@ -33,6 +33,7 @@ import {
 import { ScrollArea } from "./shadcn/scroll-area";
 import { Separator } from "./shadcn/separator";
 import { FullWidthBg } from ".";
+import { BASE_URL } from "@/lib/config/URL";
 
 type Props = {
   id: string;
@@ -130,7 +131,7 @@ export function UnpublishedVideoCard({
   const router = useRouter();
 
   function handleApprove(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
-    axios.post("http://localhost:3000/api/approve-video", {
+    axios.post(`${BASE_URL}/api/approve-video`, {
       videoId: id,
     });
     router.refresh();
@@ -139,7 +140,7 @@ export function UnpublishedVideoCard({
   function handleSendForApproval(
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) {
-    axios.post("http://localhost:3000/api/send-video-for-approval", {
+    axios.post(`${BASE_URL}/api/send-video-for-approval`, {
       videoId: id,
     });
     router.refresh();
@@ -148,12 +149,9 @@ export function UnpublishedVideoCard({
   async function handleEdit(
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) {
-    let response = await axios.post(
-      "http://localhost:3000/api/video-editable",
-      {
-        videoId: id,
-      }
-    );
+    let response = await axios.post(`${BASE_URL}/api/video-editable`, {
+      videoId: id,
+    });
     if (response.data.state === "editable") {
       setvideoIdState(id);
       setvideoDescriptionState(description ?? "");
@@ -202,7 +200,7 @@ export function UnpublishedVideoCard({
     setIsPusblishingState(true);
     const ytTokenCookie = Cookies.get("yt-token");
     if (ytTokenCookie) {
-      await axios.post("http://localhost:3000/api/publish-video", {
+      await axios.post(`${BASE_URL}/api/publish-video`, {
         videoId: id,
         ytToken: JSON.parse(decodeURIComponent(ytTokenCookie)),
       });
@@ -211,7 +209,7 @@ export function UnpublishedVideoCard({
         description: "Successfully published to Youtube!!",
       });
     } else {
-      let response = await axios.get("http://localhost:3000/api/get-yt-token");
+      let response = await axios.get(`${BASE_URL}/api/get-yt-token`);
       router.push(response.data.url);
     }
     setIsPusblishingState(false);

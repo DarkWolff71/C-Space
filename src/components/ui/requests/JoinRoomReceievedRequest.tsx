@@ -9,6 +9,7 @@ import { ScrollArea } from "../shadcn/scroll-area";
 import { Separator } from "../shadcn/separator";
 import { useToast } from "../shadcn/use-toast";
 import { useRouter } from "next/navigation";
+import { BASE_URL } from "@/lib/config/URL";
 
 type Props = {
   requestId: string;
@@ -29,7 +30,7 @@ export function JoinRoomReceievedRequest({
   const router = useRouter();
 
   async function handleAccept() {
-    await axios.post("http://localhost:3000/api/accept-join-request", {
+    await axios.post(`${BASE_URL}/api/accept-join-request`, {
       requestId,
     });
     router.refresh();
@@ -39,7 +40,7 @@ export function JoinRoomReceievedRequest({
   }
 
   async function handleReject() {
-    await axios.post("http://localhost:3000/api/cancel-join-request", {
+    await axios.post(`${BASE_URL}/api/cancel-join-request`, {
       requestId,
     });
     router.refresh();

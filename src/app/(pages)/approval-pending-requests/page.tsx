@@ -3,6 +3,7 @@ import {
   PageContent,
   RemoveFromRoomApprovalPendingRequest,
 } from "@/components/ui/";
+import { BASE_URL } from "@/lib/config/URL";
 import { getCookiesString } from "@/lib/helpers/cookiesString";
 import { Role } from "@prisma/client";
 import React from "react";
@@ -45,8 +46,8 @@ async function fetchData(url: string) {
 export default async function ApprovalPendingRequests() {
   const [approvalPendingRequestsResponse, roomOwnersResponse] =
     await Promise.all([
-      fetchData("http://localhost:3000/api/get-approval-pending-requests"),
-      fetchData("http://localhost:3000/api/get-room-owners"),
+      fetchData(`${BASE_URL}/api/get-approval-pending-requests`),
+      fetchData(`${BASE_URL}/api/get-room-owners`),
     ]);
   const {
     approvalPendingJoinRequests,

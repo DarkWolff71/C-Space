@@ -40,9 +40,9 @@ To experience the platform, visit [C-Space](#) and sign up as either an owner or
 
 1. Clone the repository: `git clone https://github.com/DarkWolff71/C-Space.git`
 2. Create .env and .env.local files:
-    - cd C-Space
-    - vim .env.local  // populate it referring .env.local.sample
-    - vim prisma/.env // populate it referring prisma/.env.sample
+    - `cd C-Space`
+    - `vim .env.local` // populate it referring .env.local.sample
+    - `vim prisma/.env` // populate it referring prisma/.env.sample
 3. Install dependencies: `pnpm install`
 3. Set up the database and configure environmental variables.
 4. Run the application: `pnpm run dev`

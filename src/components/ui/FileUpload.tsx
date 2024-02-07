@@ -177,7 +177,9 @@ export function FileUpload({
                     label: "tracking-wider font-medium text-default-600",
                     value: "text-foreground/60",
                   }}
-                  label={100 ? "Uploading" : "Uploaded"}
+                  label={
+                    videoUploadedPercentage != 100 ? "Uploading" : "Uploaded"
+                  }
                   value={videoUploadedPercentage}
                   showValueLabel={true}
                 />

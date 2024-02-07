@@ -2,7 +2,7 @@
 import { nextui } from "@nextui-org/react";
 
 module.exports = {
-  darkMode: ["media"],
+  darkMode: "class",
   content: [
     "./pages/**/*.{ts,tsx}",
     "./components/**/*.{ts,tsx}",

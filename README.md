@@ -30,7 +30,7 @@ C-Space offers a secure alternative where YouTubers and editors can collaborate 
 - **Authentication**: OAuth and NextAuth
 - **State Management**: Recoil
 - **UI Libraries**: NextUI, Shadcn UI, Radix UI, MUI, Flowbite and Tailwind CSS
-- **AWS**: S3, RDS
+- **AWS**: S3, RDS, EC2
 
 ## Getting Started
 
